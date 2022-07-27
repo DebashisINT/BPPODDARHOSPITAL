@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "399031024421",
+    "project_id": "bp-poddar-fsm",
+    "storage_bucket": "bp-poddar-fsm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399031024421:android:5c947aaf42c5f06048b8cc",
+        "android_client_info": {
+          "package_name": "com.bppoddarfsm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "399031024421-ib833k8h43482cqfdkf4vq2bk0vhchle.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoEZbjMiU9S9RJ0eEOh6TpXIS5axul_Cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "399031024421-ib833k8h43482cqfdkf4vq2bk0vhchle.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
