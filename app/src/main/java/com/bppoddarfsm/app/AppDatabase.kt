@@ -50,16 +50,15 @@ import com.bppoddarfsm.features.login.*
         PriorityListEntity::class, ActivityEntity::class, AddDoctorProductListEntity::class, AddDoctorEntity::class,
         AddChemistProductListEntity::class, AddChemistEntity::class, DocumentypeEntity::class, DocumentListEntity::class, PaymentModeEntity::class,
         EntityTypeEntity::class, PartyStatusEntity::class, RetailerEntity::class, DealerEntity::class, BeatEntity::class, AssignToShopEntity::class,
-        VisitRemarksEntity::class,ShopVisitCompetetorModelEntity::class,
-        OrderStatusRemarksModelEntity::class,CurrentStockEntryModelEntity::class,CurrentStockEntryProductModelEntity::class,
-           CcompetetorStockEntryModelEntity::class,CompetetorStockEntryProductModelEntity::class,
+        VisitRemarksEntity::class, ShopVisitCompetetorModelEntity::class,
+        OrderStatusRemarksModelEntity::class, CurrentStockEntryModelEntity::class, CurrentStockEntryProductModelEntity::class,
+        CcompetetorStockEntryModelEntity::class, CompetetorStockEntryProductModelEntity::class,
         ShopTypeStockViewStatus::class,
-        NewOrderGenderEntity::class,NewOrderProductEntity::class,NewOrderColorEntity::class,NewOrderSizeEntity::class,NewOrderScrOrderEntity::class,ProspectEntity::class,
-        QuestionEntity::class,QuestionSubmitEntity::class,AddShopSecondaryImgEntity::class,ReturnDetailsEntity::class
-        ,ReturnProductListEntity::class,UserWiseLeaveListEntity::class,ShopFeedbackEntity::class,ShopFeedbackTempEntity::class,LeadActivityEntity::class,
-        ShopDtlsTeamEntity::class,CollDtlsTeamEntity::class,BillDtlsTeamEntity::class,OrderDtlsTeamEntity::class,
-            TeamAllShopDBModelEntity::class,DistWiseOrderTblEntity::class),
-        version = 1, exportSchema = false)
+        NewOrderGenderEntity::class, NewOrderProductEntity::class, NewOrderColorEntity::class, NewOrderSizeEntity::class, NewOrderScrOrderEntity::class, ProspectEntity::class,
+        QuestionEntity::class, QuestionSubmitEntity::class, AddShopSecondaryImgEntity::class, ReturnDetailsEntity::class, ReturnProductListEntity::class, UserWiseLeaveListEntity::class, ShopFeedbackEntity::class, ShopFeedbackTempEntity::class, LeadActivityEntity::class,
+        ShopDtlsTeamEntity::class, CollDtlsTeamEntity::class, BillDtlsTeamEntity::class, OrderDtlsTeamEntity::class,
+        TeamAllShopDBModelEntity::class, DistWiseOrderTblEntity::class, NewGpsStatusEntity::class),
+        version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun addShopEntryDao(): AddShopDao
@@ -103,6 +102,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun selectedRouteListDao(): SelectedRouteDao
     abstract fun selectedRouteShopListDao(): SelectedRouteShopListDao
     abstract fun updateOutstandingDao(): OutstandingListDao
+
     //abstract fun locationDao(): LocationDao
     abstract fun idleLocDao(): IdleLocDao
 
@@ -171,25 +171,27 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun prosDao(): ProspectDao
     abstract fun questionMasterDao(): QuestionDao
-    abstract fun questionSubmitDao():  QuestionSubmitDao
-    abstract fun addShopSecondaryImgDao():  AddShopSecondaryImgDao
+    abstract fun questionSubmitDao(): QuestionSubmitDao
+    abstract fun addShopSecondaryImgDao(): AddShopSecondaryImgDao
 
-    abstract fun returnDetailsDao():ReturnDetailsDao
-    abstract fun returnProductListDao():ReturnProductListDao
+    abstract fun returnDetailsDao(): ReturnDetailsDao
+    abstract fun returnProductListDao(): ReturnProductListDao
 
     abstract fun userWiseLeaveListDao(): UserWiseLeaveListDao
 
     abstract fun shopFeedbackDao(): ShopFeedbackDao
-    abstract fun shopFeedbackTempDao() : ShopFeedbackTepDao
-    abstract fun leadActivityDao() : LeadActivityDao
+    abstract fun shopFeedbackTempDao(): ShopFeedbackTepDao
+    abstract fun leadActivityDao(): LeadActivityDao
 
-    abstract fun shopDtlsTeamDao() : ShopDtlsTeamDao
-    abstract fun billDtlsTeamDao() : BillDtlsTeamDao
-    abstract fun orderDtlsTeamDao() : OrderDtlsTeamDao
-    abstract fun collDtlsTeamDao() : CollDtlsTeamDao
-    abstract fun teamAllShopDBModelDao() : TeamAllShopDBModelDao
+    abstract fun shopDtlsTeamDao(): ShopDtlsTeamDao
+    abstract fun billDtlsTeamDao(): BillDtlsTeamDao
+    abstract fun orderDtlsTeamDao(): OrderDtlsTeamDao
+    abstract fun collDtlsTeamDao(): CollDtlsTeamDao
+    abstract fun teamAllShopDBModelDao(): TeamAllShopDBModelDao
 
-    abstract fun distWiseOrderTblDao() : DistWiseOrderTblDao
+    abstract fun distWiseOrderTblDao(): DistWiseOrderTblDao
+
+    abstract fun newGpsStatusDao(): NewGpsStatusDao
 
 
     companion object {
@@ -201,7 +203,7 @@ abstract class AppDatabase : RoomDatabase() {
                         // allow queries on the main thread.
                         // Don't do this on a real app! See PersistenceBasicSample for an example.
                         .allowMainThreadQueries()
-                        .addMigrations(
+                        .addMigrations(MIGRATION_1_2
                         )
 //                        .fallbackToDestructiveMigration()
                         .build()
@@ -217,11 +219,20 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE = null
         }
 
-
-
-
-
-
+        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE IF NOT EXISTS `shop_detail_all_team` (`shopId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shop_name` TEXT, `shop_id` TEXT, `address` TEXT, `pin_code` TEXT, `owner_name` TEXT, `owner_contact_number` TEXT, `owner_email` TEXT, `shop_image_local_path` TEXT, `shop_image_local_path_competitor` TEXT, `shop_image_url` TEXT, `shopLat` REAL, `shopLong` REAL, `isVisited` INTEGER, `odervalue` INTEGER NOT NULL, `visitDate` TEXT, `lastVisitedDate` TEXT, `totalVisitCount` TEXT, `dateOfBirth` TEXT, `dateOfAniversary` TEXT, `Duration` TEXT, `timeStamp` TEXT, `endTimeStamp` TEXT, `user_id` TEXT, `type` TEXT, `isUploaded` INTEGER NOT NULL, `isAddressUpdated` INTEGER NOT NULL, `assigned_to_dd_id` TEXT, `assigned_to_pp_id` TEXT, `isEditUploaded` INTEGER NOT NULL, `is_otp_verified` TEXT, `added_date` TEXT, `amount` TEXT, `entity_code` TEXT, `area_id` TEXT, `model_id` TEXT, `primary_app_id` TEXT, `secondary_app_id` TEXT, `lead_id` TEXT, `funnel_stage_id` TEXT, `stage_id` TEXT, `booking_amount` TEXT, `type_id` TEXT, `director_name` TEXT, `family_member_dob` TEXT, `person_name` TEXT, `person_no` TEXT, `add_dob` TEXT, `add_doa` TEXT, `doc_degree` TEXT, `specialization` TEXT, `patient_count` TEXT, `category` TEXT, `doc_family_dob` TEXT, `doc_address` TEXT, `doc_pincode` TEXT, `chamber_status` INTEGER NOT NULL, `remarks` TEXT, `chemist_name` TEXT, `chemist_address` TEXT, `chemist_pincode` TEXT, `assistant_name` TEXT, `assistant_no` TEXT, `assistant_dob` TEXT, `assistant_doa` TEXT, `assistant_family_dob` TEXT, `entity_id` TEXT, `party_status_id` TEXT, `retailer_id` TEXT, `dealer_id` TEXT, `beat_id` TEXT, `account_holder` TEXT, `account_no` TEXT, `bank_name` TEXT, `ifsc_code` TEXT, `upi_id` TEXT, `assigned_to_shop_id` TEXT, `actual_address` TEXT, `agency_name` TEXT, `lead_contact_number` TEXT, `rubylead_image1` TEXT, `rubylead_image2` TEXT, `project_name` TEXT, `landline_number` TEXT, `alternateNoForCustomer` TEXT, `whatsappNoForCustomer` TEXT, `isShopDuplicate` INTEGER NOT NULL)");
+                database.execSQL("ALTER TABLE battery_net_status_list ADD COLUMN Available_Storage TEXT ")
+                database.execSQL("ALTER TABLE  battery_net_status_list ADD COLUMN Total_Storage TEXT")
+                database.execSQL("ALTER TABLE battery_net_status_list ADD COLUMN Power_Saver_Status TEXT NOT NULL DEFAULT 'Off' ")
+                database.execSQL("create TABLE new_gps_status  (id INTEGER NOT NULL PRIMARY KEY , date_time  TEXT , gps_service_status TEXT, network_status  TEXT , isUploaded INTEGER NOT NULL DEFAULT 0) ")
+                database.execSQL("ALTER TABLE shop_detail ADD COLUMN isOwnshop INTEGER NOT NULL DEFAULT 1 ")
+                database.execSQL("CREATE INDEX ACTIVITYID ON shop_activity (shopActivityId,shopid,visited_date)")
+                database.execSQL("CREATE INDEX ACTIVITY_ID_DATE ON shop_activity (shopid,visited_date)")
+                database.execSQL("alter table shop_detail ADD COLUMN GSTN_Number TEXT")
+                database.execSQL("alter table shop_detail ADD COLUMN ShopOwner_PAN TEXT")
+            }
+        }
 
 
     }

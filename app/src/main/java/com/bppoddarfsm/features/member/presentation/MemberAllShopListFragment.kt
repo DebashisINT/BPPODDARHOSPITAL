@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
-import com.bppoddarfsm.CustomStatic
 import com.elvishew.xlog.XLog
 import com.pnikosis.materialishprogress.ProgressWheel
 import com.bppoddarfsm.R
@@ -19,7 +18,6 @@ import com.bppoddarfsm.app.AppDatabase
 import com.bppoddarfsm.app.NetworkConstant
 import com.bppoddarfsm.app.Pref
 import com.bppoddarfsm.app.SearchListener
-import com.bppoddarfsm.app.domain.AddShopDBModelEntity
 import com.bppoddarfsm.app.domain.MemberShopEntity
 import com.bppoddarfsm.app.types.FragType
 import com.bppoddarfsm.app.utils.AppUtils
@@ -180,9 +178,9 @@ class MemberAllShopListFragment : BaseFragment() {
                                 }
 
                                 if (response.shop_list != null && response.shop_list!!.size > 0) {
-                                    response.shop_list = response.shop_list!!.reversed().distinctBy { it.shop_id } as ArrayList<TeamShopListDataModel>
-                                    shop_list = response.shop_list!!.reversed() as ArrayList<TeamShopListDataModel>
-                                    response.shop_list = response.shop_list!!.reversed() as ArrayList<TeamShopListDataModel>
+                                    //if(shopId.equals(""))
+                                        response.shop_list = response.shop_list!!.distinctBy { it.shop_id } as ArrayList<TeamShopListDataModel>
+                                    shop_list = response.shop_list
                                     initAdapter(response.shop_list!!)
                                 } else {
                                     if (TextUtils.isEmpty(shopId))
@@ -289,7 +287,6 @@ class MemberAllShopListFragment : BaseFragment() {
                         (mContext as DashboardActivity).showSnackMessage(getString(R.string.no_internet))
                     }
                     else{
-                            var tt=CustomStatic.ShopFeedBachHisUserId
                         (mContext as DashboardActivity).loadFragment(FragType.ShopFeedbackHisFrag, true, it)
                     }
                 }

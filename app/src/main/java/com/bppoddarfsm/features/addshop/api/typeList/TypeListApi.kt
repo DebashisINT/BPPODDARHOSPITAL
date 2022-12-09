@@ -5,6 +5,7 @@ import com.bppoddarfsm.app.NetworkConstant
 import com.bppoddarfsm.base.BaseResponse
 import com.bppoddarfsm.features.addshop.model.*
 import com.bppoddarfsm.features.addshop.model.assigntopplist.AssignToPPListResponseModel
+import com.bppoddarfsm.features.beatCustom.BeatTeamResponseModel
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
