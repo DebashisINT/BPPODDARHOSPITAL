@@ -180,7 +180,9 @@ class MemberAllShopListFragment : BaseFragment() {
                                 }
 
                                 if (response.shop_list != null && response.shop_list!!.size > 0) {
-                                    shop_list = response.shop_list
+                                    response.shop_list = response.shop_list!!.reversed().distinctBy { it.shop_id } as ArrayList<TeamShopListDataModel>
+                                    shop_list = response.shop_list!!.reversed() as ArrayList<TeamShopListDataModel>
+                                    response.shop_list = response.shop_list!!.reversed() as ArrayList<TeamShopListDataModel>
                                     initAdapter(response.shop_list!!)
                                 } else {
                                     if (TextUtils.isEmpty(shopId))
