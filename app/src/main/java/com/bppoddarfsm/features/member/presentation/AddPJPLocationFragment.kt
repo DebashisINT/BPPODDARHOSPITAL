@@ -1,6 +1,5 @@
 package com.bppoddarfsm.features.member.presentation
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.location.Address
@@ -93,7 +92,6 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
         }
     }
 
-    @SuppressLint("UseRequireInsteadOfGet")
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -136,7 +134,7 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
     }
 
 
-    override fun onLocationChanged(location: Location) {
+    override fun onLocationChanged(location: Location?) {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -238,7 +236,7 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
                                 mGoogleMap?.animateCamera(CameraUpdateFactory.newLatLng(places.get(0).latLng))
                                 if (currentLocationMarker != null)
                                     currentLocationMarker?.remove()
-                                currentLocationMarker = mGoogleMap?.addMarker(markerOptions!!)
+                                currentLocationMarker = mGoogleMap?.addMarker(markerOptions)
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
@@ -417,7 +415,7 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
                     if (currentLocationMarker != null)
                         currentLocationMarker?.remove()
 
-                    currentLocationMarker = mGoogleMap?.addMarker(markerOptions!!)!!
+                    currentLocationMarker = mGoogleMap?.addMarker(markerOptions)!!
 
                     fetchPinnedAddress(LatLng(selectedLat, selectedLong))
                 } catch (e: Exception) {
@@ -428,7 +426,7 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
         }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: GoogleMap?) {
         mGoogleMap = googleMap
         mGoogleMap?.uiSettings?.isZoomControlsEnabled = true
 
@@ -458,7 +456,7 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
             if (currentLocationMarker != null)
                 currentLocationMarker?.remove()
 
-            currentLocationMarker = mGoogleMap?.addMarker(markerOptions!!)!!
+            currentLocationMarker = mGoogleMap?.addMarker(markerOptions)!!
 
 
             if (!TextUtils.isEmpty(et_radius.text.toString().trim())) {
@@ -499,7 +497,6 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
         circle = mGoogleMap?.addCircle(circleOptions)
     }
 
-    @SuppressLint("UseRequireInsteadOfGet")
     override fun onStop() {
         mGoogleApiClient?.takeIf { it.isConnected }?.let {
             it.stopAutoManage(activity!!)
@@ -509,7 +506,6 @@ class AddPJPLocationFragment : BaseFragment(), OnMapReadyCallback, View.OnClickL
         super.onStop()
     }
 
-    @SuppressLint("UseRequireInsteadOfGet")
     override fun onDestroyView() {
         super.onDestroyView()
 
