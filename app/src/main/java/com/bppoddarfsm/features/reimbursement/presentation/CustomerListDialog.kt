@@ -13,7 +13,9 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import com.bppoddarfsm.R
+import com.bppoddarfsm.features.member.CustomerOnClick
 import com.bppoddarfsm.features.member.model.CustomerDataModel
+import com.bppoddarfsm.features.member.presentation.Customer2Adapter
 import com.bppoddarfsm.features.member.presentation.CustomerAdapter
 import com.bppoddarfsm.widgets.AppCustomEditText
 import com.bppoddarfsm.widgets.AppCustomTextView
@@ -28,7 +30,8 @@ class CustomerListDialog : DialogFragment() {
     //private var mAssignedList: ArrayList<String>? = null
     private lateinit var dialog_header_TV: AppCustomTextView
     private lateinit var et_search: AppCustomEditText
-    private var adapter: CustomerAdapter? = null
+//    private var adapter: CustomerAdapter? = null
+    private var adapter: Customer2Adapter? = null
     private var customerList: ArrayList<CustomerDataModel>? = null
     private lateinit var iv_close_icon: ImageView
 
@@ -86,9 +89,16 @@ class CustomerListDialog : DialogFragment() {
             }
         })*/
 
-        adapter = CustomerAdapter(mContext, customerList!!, { customer: CustomerDataModel ->
-            onClick(customer)
-            dismiss()
+//        adapter = CustomerAdapter(mContext, customerList!!, { customer: CustomerDataModel ->
+//            onClick(customer)
+//            dismiss()
+//        })
+
+        adapter= Customer2Adapter(mContext,customerList!!,object: CustomerOnClick {
+            override fun OnClick(obj: CustomerDataModel) {
+                onClick(obj)
+                dismiss()
+            }
         })
 
         rv_common_dialog_list.adapter = adapter
