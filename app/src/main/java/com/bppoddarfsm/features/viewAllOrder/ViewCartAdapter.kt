@@ -85,10 +85,30 @@ class ViewCartAdapter(private val context: Context, private val selectedProductL
 
             itemView.tv_brand_item.text = "Rate: ₹ " + String.format("%.2f", categoryList[adapterPosition].rate?.toFloat())
 
-            if (categoryList[adapterPosition].qty?.contains(".")!!)
-                itemView.tv_category_item.text = "Quantity: " + categoryList[adapterPosition].qty?.toFloat()?.toInt() //categoryList?.get(adapterPosition)?.category
-            else
-                itemView.tv_category_item.text = "Quantity: " + categoryList[adapterPosition].qty
+//            if (categoryList[adapterPosition].qty?.contains(".")!!)
+//                itemView.tv_category_item.text = "Quantity: " + categoryList[adapterPosition].qty?.toFloat()?.toInt() //categoryList?.get(adapterPosition)?.category
+//            else
+//                itemView.tv_category_item.text = "Quantity: " + categoryList[adapterPosition].qty
+            try {
+
+                var finalQty = ""
+                try {
+                    val qty = String.format("%.3f", categoryList[adapterPosition].qty!!.toDouble()).toString()
+                    val qtyDouble = qty.toDouble()
+                    val qtyInt:Int =qtyDouble.toInt()
+
+                    if((qtyDouble - qtyInt) == 0.0){
+                        finalQty =qtyInt.toString()
+                    }else{
+                        finalQty = qtyDouble.toString()
+                    }
+                }catch (ex:Exception){
+                    finalQty=""
+                }
+                itemView.tv_category_item.text = "Quantity: " + finalQty
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
 
             try {
                 //val totalPrice = DecimalFormat("##.##").format(categoryList[adapterPosition].total_price?.toDouble())
@@ -96,6 +116,7 @@ class ViewCartAdapter(private val context: Context, private val selectedProductL
                 itemView.tv_watt_item.text = "Total Price: ₹ $totalPrice"  //categoryList?.get(adapterPosition)?.watt
             } catch (e: Exception) {
                 e.printStackTrace()
+                itemView.tv_category_item.text = "Quantity: " + categoryList[adapterPosition].qty
             }
             //(context as DashboardActivity).totalPrice.add((context as DashboardActivity).rateList[adapterPosition].toInt() * (context as DashboardActivity).qtyList[adapterPosition].toInt())
             //itemView.tv_edit_product.visibility = View.GONE

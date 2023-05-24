@@ -3,26 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_custom_side_menu"
+    android:background="@drawable/sidebar_image_3"
     android:gravity="end">
+    <!--android:background="@drawable/shape_custom_side_menu" -->
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+      <ScrollView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:id="@+id/menu_RL"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="end">
+          <RelativeLayout
+              android:id="@+id/menu_RL"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="end">
 
-            <!--        <android.support.v7.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_marginTop="?actionBarSize"
-                        app:cardElevation="@dimen/_5sdp"
-                        app:cardUseCompatPadding="true">-->
+              <!--        <android.support.v7.widget.CardView
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginEnd="@dimen/_8sdp"
+                          android:layout_marginTop="?actionBarSize"
+                          app:cardElevation="@dimen/_5sdp"
+                          app:cardUseCompatPadding="true">-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,7 +34,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_menu_header_image">
+                    android:background="@drawable/ic_menu_header_image"
+                    android:backgroundTint="#1A2F8FF7">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -199,6 +201,38 @@
                     android:textSize="@dimen/_12sdp"
                     android:visibility="visible" />
 
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/tb_auto_revisit_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_nearby_new"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:text="Revisit"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <!-- 3.0  AppV 4.0.6  DashboardActivity -->
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/tb_total_visit_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_nearby_new"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:text="Total Visit"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+
                 <!--clear Attendance -->
                 <com.bppoddarfsm.widgets.AppCustomTextView
                     android:id="@+id/tv_clear_attendance"
@@ -334,13 +368,43 @@
                     android:id="@+id/nearby_shop_TV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_nearby_new"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:text="@string/nearby_shops"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/menu_beat_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/_15sdp"
                     android:drawableStart="@drawable/ic_nearby_new"
                     android:paddingBottom="@dimen/_7sdp"
                     android:paddingLeft="@dimen/_17sdp"
                     android:paddingRight="@dimen/_17sdp"
                     android:paddingTop="@dimen/_15sdp"
-                    android:text="@string/nearby_shops"
+                    android:text="Beat"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/tv_pending_out_loc_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:drawableStart="@drawable/ic_nearby_new"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:text="Pending Out Location"
                     android:textColor="@color/lightest_gray"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="visible" />
@@ -370,6 +434,23 @@
                     android:paddingRight="@dimen/_17sdp"
                     android:paddingTop="@dimen/_15sdp"
                     android:text="Assigned Lead"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp" />
+
+                <!--mantis 0026023 A new Menu named as
+                ‘Task Management’ should be implemented in the menu bar.-->
+
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/task_management_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:drawableStart="@drawable/ic_professional_skills_lead"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:text="Task Management"
                     android:textColor="@color/lightest_gray"
                     android:textSize="@dimen/_12sdp" />
 
@@ -415,6 +496,21 @@
                     android:paddingRight="@dimen/_17sdp"
                     android:paddingTop="@dimen/_15sdp"
                     android:text="@string/history"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp" />
+                <!--Performace Menu In Menu bar 24-03-2023 by saheli-->
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/tv_performance_teamMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:drawableStart="@drawable/ic_performance"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:text="Performance"
+                    android:visibility="visible"
                     android:textColor="@color/lightest_gray"
                     android:textSize="@dimen/_12sdp" />
 
@@ -1095,6 +1191,23 @@
                     android:textSize="@dimen/_12sdp"
                     android:visibility="gone" />
 
+                <!--mantis 0025783 In-app privacy policy working in menu & Login -->
+
+                <com.bppoddarfsm.widgets.AppCustomTextView
+                    android:id="@+id/privacy_policy_tv_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_15sdp"
+                    android:drawableStart="@drawable/ic_party_status"
+                    android:drawableTint="@color/white"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingLeft="@dimen/_17sdp"
+                    android:paddingRight="@dimen/_17sdp"
+                    android:paddingTop="@dimen/_15sdp"
+                    android:text="Privacy policy"
+                    android:textColor="@color/lightest_gray"
+                    android:textSize="@dimen/_12sdp" />
+
                 <com.bppoddarfsm.widgets.AppCustomTextView
                     android:id="@+id/logout_TV"
                     android:layout_width="match_parent"
@@ -1109,6 +1222,7 @@
                     android:textColor="@color/lightest_gray"
                     android:textSize="@dimen/_12sdp" />
 
+
                 <com.bppoddarfsm.widgets.AppCustomTextView
                     android:id="@+id/version_name_TV"
                     android:layout_width="wrap_content"
@@ -1121,6 +1235,8 @@
                     android:textColor="@color/color_custom_red"
                     android:textStyle="bold"
                     android:textSize="@dimen/_12sdp" />
+
+
 
             </LinearLayout>
 

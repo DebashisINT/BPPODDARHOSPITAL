@@ -8,7 +8,7 @@ import com.bppoddarfsm.app.utils.AppUtils
 import com.bppoddarfsm.base.BaseResponse
 import com.bppoddarfsm.base.presentation.BaseActivity
 import com.bppoddarfsm.fcm.api.UpdateDeviceTokenRepoProvider
-import com.elvishew.xlog.XLog
+
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync

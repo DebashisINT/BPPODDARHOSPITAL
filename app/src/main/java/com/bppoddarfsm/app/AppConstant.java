@@ -145,5 +145,12 @@ public interface AppConstant {
 
     String NEW_GPS_STATUS = "new_gps_status";
 
+    String SHOP_EXTRA_CONTACT = "shop_extra_contact";
+
+    String PRODUCT_ONLINE_RATE_TEMP_TABLE = "product_online_rate_temp_table";
+
+
+    String TASK_ACTIVITY = "task_activity";
+
 
 }

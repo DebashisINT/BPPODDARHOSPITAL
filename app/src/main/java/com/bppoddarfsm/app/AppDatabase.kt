@@ -15,6 +15,8 @@ import com.bppoddarfsm.features.lead.model.LeadActivityEntity
 import com.bppoddarfsm.features.location.UserLocationDataDao
 import com.bppoddarfsm.features.location.UserLocationDataEntity
 import com.bppoddarfsm.features.login.*
+import com.bppoddarfsm.features.taskManagement.model.TaskManagementDao
+import com.bppoddarfsm.features.taskManagement.model.TaskManagmentEntity
 
 
 /*
@@ -32,6 +34,12 @@ import com.bppoddarfsm.features.login.*
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+//Revision History
+// 1.0   AppV 4.0.6  Saheli    05/012/2023 shop_extra_contact migration
+// 2.0   AppV 4.0.6  Saheli    06/01/2023 shop_activity and tbl_shop_deefback migration
+// 3.0   AppV 4.0.6  Saheli    11/01/2023  shopStatusUpdate migration
+// 4.0   AppV 4.0.6  Saheli    20/01/2023  order_product_list order_mrp & order_discount  migration mantis 25601
+// 5.0   AppV 4.0.6  Saheli    01/02/2023  product_list   migration changes
 
 @Database(entities = arrayOf(AddShopDBModelEntity::class, UserLocationDataEntity::class, UserLoginDataEntity::class, ShopActivityEntity::class,
         StateListEntity::class, CityListEntity::class, MarketingDetailEntity::class, MarketingDetailImageEntity::class, MarketingCategoryMasterEntity::class,
@@ -57,8 +65,8 @@ import com.bppoddarfsm.features.login.*
         NewOrderGenderEntity::class, NewOrderProductEntity::class, NewOrderColorEntity::class, NewOrderSizeEntity::class, NewOrderScrOrderEntity::class, ProspectEntity::class,
         QuestionEntity::class, QuestionSubmitEntity::class, AddShopSecondaryImgEntity::class, ReturnDetailsEntity::class, ReturnProductListEntity::class, UserWiseLeaveListEntity::class, ShopFeedbackEntity::class, ShopFeedbackTempEntity::class, LeadActivityEntity::class,
         ShopDtlsTeamEntity::class, CollDtlsTeamEntity::class, BillDtlsTeamEntity::class, OrderDtlsTeamEntity::class,
-        TeamAllShopDBModelEntity::class, DistWiseOrderTblEntity::class, NewGpsStatusEntity::class),
-        version = 2, exportSchema = false)
+        TeamAllShopDBModelEntity::class, DistWiseOrderTblEntity::class, NewGpsStatusEntity::class,ShopExtraContactEntity::class,ProductOnlineRateTempEntity::class, TaskManagmentEntity::class),
+        version = 3, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun addShopEntryDao(): AddShopDao
@@ -192,6 +200,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun distWiseOrderTblDao(): DistWiseOrderTblDao
 
     abstract fun newGpsStatusDao(): NewGpsStatusDao
+    abstract fun shopExtraContactDao(): ShopExtraContactDao
+
+    abstract fun productOnlineRateTempDao(): ProductOnlineRateTempDao
+
+
+    abstract fun taskManagementDao(): TaskManagementDao
 
 
     companion object {
@@ -203,8 +217,7 @@ abstract class AppDatabase : RoomDatabase() {
                         // allow queries on the main thread.
                         // Don't do this on a real app! See PersistenceBasicSample for an example.
                         .allowMainThreadQueries()
-                        .addMigrations(MIGRATION_1_2
-                        )
+                        .addMigrations(MIGRATION_1_2,MIGRATION_2_3)
 //                        .fallbackToDestructiveMigration()
                         .build()
             }
@@ -231,6 +244,36 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("CREATE INDEX ACTIVITY_ID_DATE ON shop_activity (shopid,visited_date)")
                 database.execSQL("alter table shop_detail ADD COLUMN GSTN_Number TEXT")
                 database.execSQL("alter table shop_detail ADD COLUMN ShopOwner_PAN TEXT")
+            }
+        }
+
+
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("alter table product_list ADD COLUMN product_mrp_show TEXT")// 5.0   AppV 4.0.6  product_list   migration changes
+                database.execSQL("alter table product_list ADD COLUMN product_discount_show TEXT")// 5.0   AppV 4.0.6  product_list   migration changes
+                database.execSQL("alter table shop_activity ADD COLUMN isnewShop INTEGER NOT NULL DEFAULT 0")
+                // 1.0   AppV 4.0.6 shop_extra_contact migration
+                database.execSQL("create TABLE shop_extra_contact (id INTEGER NOT NULL PRIMARY KEY , shop_id TEXT , contact_serial TEXT, contact_name TEXT , contact_number TEXT , contact_email TEXT , contact_doa TEXT ,contact_dob TEXT , isUploaded INTEGER NOT NULL DEFAULT 0) ")
+                // 2.0   AppV 4.0.6   shop_activity and tbl_shop_deefback migration
+                database.execSQL("alter table shop_activity ADD COLUMN multi_contact_name TEXT")
+                database.execSQL("alter table shop_activity ADD COLUMN multi_contact_number TEXT")
+                database.execSQL("alter table tbl_shop_deefback ADD COLUMN multi_contact_name TEXT")
+                database.execSQL("alter table tbl_shop_deefback ADD COLUMN multi_contact_number TEXT")
+                // 3.0   AppV 4.0.6  shopStatusUpdate migration
+                database.execSQL("ALTER TABLE shop_detail ADD COLUMN shopStatusUpdate TEXT DEFAULT '1' ")
+
+                // 4.0   AppV 4.0.6  order_product_list order_mrp & order_discount  migration mantis 25601
+                database.execSQL("alter table order_product_list ADD COLUMN order_mrp TEXT")
+                database.execSQL("alter table order_product_list ADD COLUMN order_discount TEXT")
+                database.execSQL("create TABLE product_online_rate_temp_table  (id INTEGER NOT NULL PRIMARY KEY , product_id  TEXT , rate TEXT, stock_amount TEXT , stock_unit TEXT , isStockShow INTEGER NOT NULL DEFAULT 0 , isRateShow INTEGER NOT NULL DEFAULT 0) ")
+
+                database.execSQL("alter table shop_activity ADD COLUMN distFromProfileAddrKms TEXT")
+                database.execSQL("alter table shop_activity ADD COLUMN stationCode TEXT")
+
+                database.execSQL("CREATE TABLE task_activity (id INTEGER NOT NULL PRIMARY KEY, task_status_id TEXT, task_date TEXT, task_time TEXT, task_status TEXT, " +
+                        "task_details TEXT, other_remarks TEXT,task_next_date TEXT)")
+
             }
         }
 

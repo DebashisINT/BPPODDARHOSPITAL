@@ -13,8 +13,12 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import com.bppoddarfsm.R
+import com.bppoddarfsm.features.NewQuotation.adapter.MemberSalesmanListAdapter
+import com.bppoddarfsm.features.NewQuotation.dialog.MemberSalesmanListDialog
+import com.bppoddarfsm.features.NewQuotation.interfaces.SalesmanOnClick
 import com.bppoddarfsm.features.member.CustomerOnClick
 import com.bppoddarfsm.features.member.model.CustomerDataModel
+import com.bppoddarfsm.features.member.model.TeamListDataModel
 import com.bppoddarfsm.features.member.presentation.Customer2Adapter
 import com.bppoddarfsm.features.member.presentation.CustomerAdapter
 import com.bppoddarfsm.widgets.AppCustomEditText
@@ -23,6 +27,7 @@ import com.bppoddarfsm.widgets.AppCustomTextView
 /**
  * Created by Saikat on 07-Apr-20.
  */
+// 1.0 CustomerListDialog AppV 4.0.6 Saheli    03/02/2023  mantis 25644 search issue on pjpadded customer
 class CustomerListDialog : DialogFragment() {
 
     private lateinit var rv_common_dialog_list: RecyclerView
@@ -31,7 +36,7 @@ class CustomerListDialog : DialogFragment() {
     private lateinit var dialog_header_TV: AppCustomTextView
     private lateinit var et_search: AppCustomEditText
 //    private var adapter: CustomerAdapter? = null
-    private var adapter: Customer2Adapter? = null
+    private var adapter: Customer2Adapter? = null // 1.0 CustomerListDialog AppV 4.0.6 mantis 25644 search issue on pjpadded customer
     private var customerList: ArrayList<CustomerDataModel>? = null
     private lateinit var iv_close_icon: ImageView
 
@@ -81,6 +86,7 @@ class CustomerListDialog : DialogFragment() {
         rv_common_dialog_list = v.findViewById(R.id.rv_common_dialog_list)
         rv_common_dialog_list.layoutManager = LinearLayoutManager(mContext)
         iv_close_icon = v.findViewById(R.id.iv_close_icon)
+        et_search = v.findViewById(R.id.et_search)
 
         /*adapter = ClientAdapter(mContext, customerList, object : AssignedToPPAdapter.OnItemClickListener {
             override fun onItemClick(pp: AssignToPPEntity?) {
@@ -94,6 +100,7 @@ class CustomerListDialog : DialogFragment() {
 //            dismiss()
 //        })
 
+        // 1.0 CustomerListDialog AppV 4.0.6 mantis 25644 search issue on pjpadded customer
         adapter= Customer2Adapter(mContext,customerList!!,object: CustomerOnClick {
             override fun OnClick(obj: CustomerDataModel) {
                 onClick(obj)
@@ -101,9 +108,10 @@ class CustomerListDialog : DialogFragment() {
             }
         })
 
+
         rv_common_dialog_list.adapter = adapter
         dialog_header_TV.text = "Customer List"
-        et_search = v.findViewById(R.id.et_search)
+
 
         iv_close_icon.apply {
             visibility = View.VISIBLE

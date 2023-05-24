@@ -34,7 +34,7 @@ import com.bppoddarfsm.features.shopdetail.presentation.model.addcollection.AddC
 import com.bppoddarfsm.features.viewAllOrder.api.addorder.AddOrderRepoProvider
 import com.bppoddarfsm.features.viewAllOrder.model.AddOrderInputParamsModel
 import com.bppoddarfsm.features.viewAllOrder.model.AddOrderInputProductList
-import com.elvishew.xlog.XLog
+
 import com.pnikosis.materialishprogress.ProgressWheel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

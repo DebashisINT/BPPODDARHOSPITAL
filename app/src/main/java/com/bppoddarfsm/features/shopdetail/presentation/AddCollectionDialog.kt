@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.InputFilter
 import androidx.annotation.RequiresApi
 import com.google.android.material.textfield.TextInputLayout
 import androidx.fragment.app.DialogFragment
@@ -41,6 +42,7 @@ import com.bppoddarfsm.app.utils.FTStorageUtils
 import com.bppoddarfsm.app.utils.PermissionUtils
 import com.bppoddarfsm.app.utils.Toaster
 import com.bppoddarfsm.base.presentation.BaseActivity
+import com.bppoddarfsm.features.DecimalDigitsInputFilter
 import com.bppoddarfsm.features.dashboard.presentation.DashboardActivity
 import com.bppoddarfsm.features.newcollection.model.PaymentModeResponseModel
 import com.bppoddarfsm.features.newcollection.newcollectionlistapi.NewCollectionListRepoProvider
@@ -50,19 +52,22 @@ import com.bppoddarfsm.widgets.AppCustomTextView
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
-import com.elvishew.xlog.XLog
+
 import com.pnikosis.materialishprogress.ProgressWheel
 import com.themechangeapp.pickimage.PermissionHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import timber.log.Timber
 import java.io.File
 import java.util.*
 
 /**
  * Created by Saikat on 26-10-2018.
  */
+// Rev 1.0 AddCollectionDialog Suman 04/05/2023 Decimal place for amount  mantis id - 26030
+
 class AddCollectionDialog : DialogFragment(), View.OnClickListener {
 
     private lateinit var mContext: Context
@@ -175,6 +180,9 @@ class AddCollectionDialog : DialogFragment(), View.OnClickListener {
 
     private fun initView(v: View?) {
         et_collection = v?.findViewById(R.id.et_collection)!!
+        //Begin Rev 1.0 AddCollectionDialog Suman 04/05/2023 Decimal place for amount  mantis id - 26030
+        et_collection.filters=(arrayOf<InputFilter>(DecimalDigitsInputFilter(10, 2)))
+        //End of Rev 1.0 AddCollectionDialog Suman 04/05/2023 Decimal place for amount  mantis id - 26030
         shop_name_TV = v.findViewById(R.id.shop_name_TV)
         iv_close_icon = v.findViewById(R.id.iv_close_icon)
         add_TV = v.findViewById(R.id.add_TV)
@@ -633,7 +641,7 @@ class AddCollectionDialog : DialogFragment(), View.OnClickListener {
                 .subscribeOn(Schedulers.io())
                 .subscribe({ result ->
                     val response = result as PaymentModeResponseModel
-                    XLog.d("PAYMENT RESPONSE=======> " + response.status)
+                    Timber.d("PAYMENT RESPONSE=======> " + response.status)
 
                     if (response.status == NetworkConstant.SUCCESS) {
                         if (response.paymemt_mode_list != null && response.paymemt_mode_list!!.size > 0) {
@@ -670,7 +678,7 @@ class AddCollectionDialog : DialogFragment(), View.OnClickListener {
                     error.printStackTrace()
                     progress_wheel.stopSpinning()
                     Toaster.msgShort(mContext, getString(R.string.something_went_wrong))
-                    XLog.d("PAYMENT ERROR=======> " + error.localizedMessage)
+                    Timber.d("PAYMENT ERROR=======> " + error.localizedMessage)
                 })
         )
     }

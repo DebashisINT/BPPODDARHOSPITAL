@@ -16,11 +16,14 @@ import android.widget.RelativeLayout
 import com.bppoddarfsm.R
 import com.bppoddarfsm.app.AppDatabase
 import com.bppoddarfsm.app.Pref
+import com.bppoddarfsm.app.domain.AddShopDBModelEntity
 import com.bppoddarfsm.app.domain.OrderDetailsListEntity
 import com.bppoddarfsm.app.uiaction.IntentActionable
 import com.bppoddarfsm.app.utils.AppUtils
 import com.bppoddarfsm.base.presentation.BaseFragment
 import com.bppoddarfsm.features.dashboard.presentation.DashboardActivity
+import com.bppoddarfsm.features.location.LocationWizard
+import com.bppoddarfsm.features.viewAllOrder.orderOptimized.OrderProductCartFrag
 import com.bppoddarfsm.widgets.AppCustomTextView
 
 /**
@@ -98,7 +101,13 @@ class ViewCartFragment : BaseFragment() {
         tv_total_order_value = view.findViewById(R.id.tv_total_order_value)
         tv_shop_name = view.findViewById(R.id.tv_shop_name)
 
-        val shop = AppDatabase.getDBInstance()!!.addShopEntryDao().getShopDetail(orderDetails?.shop_id)
+
+        var shop = AddShopDBModelEntity()
+        try {
+             shop = AppDatabase.getDBInstance()!!.addShopEntryDao().getShopDetail(orderDetails?.shop_id)
+        }catch (ex:Exception){
+            ex.printStackTrace()
+        }
         tv_shop_name.text = shop.shopName
 
         tv_order_id = view.findViewById(R.id.tv_order_id)

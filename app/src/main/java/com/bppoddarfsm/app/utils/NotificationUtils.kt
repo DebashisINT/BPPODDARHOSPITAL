@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import com.bppoddarfsm.CustomStatic
 import com.bppoddarfsm.R
 import com.bppoddarfsm.app.AppConstant
 import com.bppoddarfsm.app.AppDatabase
@@ -27,14 +28,17 @@ import com.bppoddarfsm.features.chat.model.ChatListDataModel
 import com.bppoddarfsm.features.chat.model.ChatUserDataModel
 import com.bppoddarfsm.features.dashboard.presentation.DashboardActivity
 import com.bppoddarfsm.features.login.UserLoginDataEntity
-import com.elvishew.xlog.XLog
+
 import com.google.firebase.messaging.RemoteMessage
+import timber.log.Timber
 import java.util.*
 
 
 /**
  * Created by sandip on 10-11-2017.
  */
+// Revision History
+// 1.0 NotificationUtils Design  AppV 4.0.6 Saheli    30/01/2023 mantis 25630
 class NotificationUtils(headerText: String, bodyText: String, shopId: String, localShopId: String) {
 
     var headerText: String = headerText
@@ -252,7 +256,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
 
             val channelName = AppUtils.notificationChannelName
 
-            XLog.e("========Notification Channel enabled (FirebaseMesagingService)=========")
+            Timber.e("========Notification Channel enabled (FirebaseMesagingService)=========")
 
             val importance = NotificationManager.IMPORTANCE_HIGH
             val notificationChannel = NotificationChannel(channelId, channelName, importance)
@@ -273,7 +277,8 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setGroup("FTS Group")
                     .setGroupSummary(true)
-                    .setContent(remoteView)
+                    .setContentText(remoteMessage?.data?.get("body").toString()) //1.0 Notification Design  AppV 4.0.6 mantis 25630
+//                    .setContent(remoteView)  //1.0 Notification Design  AppV 4.0.6 mantis 25630 off
                     .build()
 
             notificationmanager.notify(m, notificationBuilder)
@@ -574,7 +579,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
         }
 
 
-        XLog.e("=================Show alarm notification (Notification)=================")
+        Timber.e("=================Show alarm notification (Notification)=================")
 
     }
 
@@ -841,7 +846,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
         }
 
 
-        XLog.e("=================Show clear data notification (Notification)=================")
+        Timber.e("=================Show clear data notification (Notification)=================")
 
     }
 
@@ -1067,7 +1072,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
 
             val channelName = AppUtils.notificationChannelName
 
-            XLog.e("========Notification Channel enabled (FirebaseMesagingService)=========")
+            Timber.e("========Notification Channel enabled (FirebaseMesagingService)=========")
 
             val importance = NotificationManager.IMPORTANCE_HIGH
             val notificationChannel = NotificationChannel(channelId, channelName, importance)
@@ -1160,7 +1165,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
 
             val channelName = AppUtils.notificationChannelName
 
-            XLog.e("========Notification Channel enabled (FirebaseMesagingService)=========")
+            Timber.e("========Notification Channel enabled (FirebaseMesagingService)=========")
 
             val importance = NotificationManager.IMPORTANCE_HIGH
             val notificationChannel = NotificationChannel(channelId, channelName, importance)
@@ -1240,7 +1245,7 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
 
             val channelName = AppUtils.notificationChannelName
 
-            XLog.e("========Notification Channel enabled (FirebaseMesagingService)=========")
+            Timber.e("========Notification Channel enabled (FirebaseMesagingService)=========")
 
             val importance = NotificationManager.IMPORTANCE_HIGH
             val notificationChannel = NotificationChannel(channelId, channelName, importance)
@@ -1447,6 +1452,9 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
         shopIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
         val pendingIntent: PendingIntent = PendingIntent.getActivity(applicationContext, 1, shopIntent, PendingIntent.FLAG_IMMUTABLE)
+
+        var remoteMsg = remoteMessage?.data?.get("body").toString()
+        CustomStatic.QutoNoFromNoti = remoteMsg.substring(remoteMsg.indexOf("(")+1, remoteMsg.indexOf(")"));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = AppUtils.notificationChannelId
