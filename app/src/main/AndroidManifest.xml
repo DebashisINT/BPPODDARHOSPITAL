@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.breezebppoddarhospital">
+    package="com.breezebppoddar">
 
     <uses-sdk />
 
@@ -164,7 +164,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.exoplayer.breezebppoddarhospital.action.VIEW" />
+                <action android:name="com.google.android.exoplayer.breezefieldsalesdemo.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -268,7 +268,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.breezebppoddarhospital.provider"
+            android:authorities="com.breezebppoddar.provider"
             android:exported="false"
             android:grantUriPermissions="true">
         <meta-data

@@ -28,6 +28,12 @@
                 android:layout_height="@dimen/_28sdp"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_date_time_3"/>
+
                 <TextView
                     android:id="@+id/tv_dialog_activity_date"
                     android:layout_width="match_parent"
@@ -35,6 +41,7 @@
                     android:layout_weight="1"
                     android:text="Activity Date"
                     android:textSize="@dimen/_11sdp"
+                    android:layout_marginLeft="@dimen/_3sdp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimaryDark"
                     android:gravity="center|start"/>
@@ -51,10 +58,18 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="@dimen/_3sdp">
 
+                <ImageView
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_activity_gray1"
+                    android:backgroundTint="@color/color_custom_blue"
+                    android:layout_marginRight="@dimen/_3sdp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Activity      :  "
+                    android:text="Activity    : "
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
@@ -78,10 +93,18 @@
                 android:layout_height="@dimen/_25sdp"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/listing_selected_rule"
+                    android:backgroundTint="@color/color_custom_blue"
+                    android:layout_marginRight="@dimen/_3sdp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Type           :  "
+                    android:text="Type         : "
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
@@ -104,10 +127,18 @@
                 android:layout_height="@dimen/_25sdp"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/icon_calender_1"
+                    android:layout_marginRight="@dimen/_3sdp"/>
+
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="Due Date   :  "
+                    android:text="Due Date : "
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
@@ -130,10 +161,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_gravity="center|top"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/icon_doc_1"
+                    android:layout_marginRight="@dimen/_3sdp"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_25sdp"
-                    android:text="Detail         :  "
+                    android:text="Detail       : "
                     android:textColor="@color/colorAccent"
                     android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
@@ -168,7 +207,7 @@
             android:orientation="horizontal">
 
 
-            <com.breezebppoddarhospital.widgets.AppCustomTextView
+            <com.breezebppoddar.widgets.AppCustomTextView
                 android:id="@+id/tv_dialog_activity_yes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

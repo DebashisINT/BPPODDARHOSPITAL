@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "765562536381",
-    "project_id": "bp-poddar-fsm-42173",
-    "storage_bucket": "bp-poddar-fsm-42173.appspot.com"
+    "project_number": "1047878530000",
+    "project_id": "demofsm-fee63",
+    "storage_bucket": "demofsm-fee63.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:765562536381:android:b9d8f2a620b96c89af92d4",
+        "mobilesdk_app_id": "1:1047878530000:android:2b15775bd3dff2797b3fd5",
         "android_client_info": {
-          "package_name": "com.bppoddar"
+          "package_name": "com.breezebppoddar"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBTpnkMHhMwMlXH5EYYep1mGWSxG0sj7mY"
+          "current_key": "AIzaSyBIL6r9laNOETisRZ_w88qeOXO1dAMCpmE"
         }
       ],
       "services": {
@@ -26,15 +26,34 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:765562536381:android:7bfff36957cee444af92d4",
+        "mobilesdk_app_id": "1:1047878530000:android:e7c444b181271f827b3fd5",
         "android_client_info": {
-          "package_name": "com.breezebppoddarhospital"
+          "package_name": "com.demonew"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBTpnkMHhMwMlXH5EYYep1mGWSxG0sj7mY"
+          "current_key": "AIzaSyBIL6r9laNOETisRZ_w88qeOXO1dAMCpmE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047878530000:android:08c64162a1a83eef7b3fd5",
+        "android_client_info": {
+          "package_name": "com.fsmevaluationlive"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIL6r9laNOETisRZ_w88qeOXO1dAMCpmE"
         }
       ],
       "services": {
