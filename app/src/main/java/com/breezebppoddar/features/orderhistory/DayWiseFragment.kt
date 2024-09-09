@@ -591,7 +591,7 @@ class DayWiseFragment : BaseFragment(), View.OnClickListener {
         var fileName = "FTS_Timeline"+ "_" + AppUtils.getFormattedDateForApi(myCalendar.time) + "_" + Pref.user_id
         fileName = fileName.replace("/", "_")
 
-        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +"/breezefieldsalesdemoApp/TIMELINE/"
+        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +"/breezebppoddarApp/TIMELINE/"
 
         var pathNew = ""
 

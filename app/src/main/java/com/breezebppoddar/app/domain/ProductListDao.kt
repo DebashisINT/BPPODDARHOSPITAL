@@ -2,6 +2,7 @@ package com.breezebppoddar.app.domain
 
 import androidx.room.*
 import com.breezebppoddar.app.AppConstant
+import com.breezebppoddar.features.contacts.ProductDtls
 import com.breezebppoddar.features.login.model.productlistmodel.ProductListDataModel
 import com.breezebppoddar.features.viewAllOrder.orderOptimized.CommonProductCatagory
 import com.breezebppoddar.features.viewAllOrder.orderOptimized.CustomProductRate
@@ -315,6 +316,12 @@ interface ProductListDao {
     @Query("SELECT * FROM " + AppConstant.PRODUCT_LIST_TABLE +" where id=:id")
     fun getSingleProduct(id: Int): ProductListEntity
 
+    @Query("select id as product_id,product_name,0 as isTick from product_list")
+    fun getProducts(): List<ProductDtls>
 
+    @Query("select id as product_id,product_name," +
+            "case when id in (:id_list) then 1 else 0 end as isTick " +
+            "from product_list")
+    fun getSelectedProductIdList(id_list: List<String>): List<ProductDtls>
 
 }

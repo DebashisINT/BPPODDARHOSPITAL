@@ -1,5 +1,6 @@
 package com.breezebppoddar.features.location
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
 import android.app.job.JobInfo
@@ -10,6 +11,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -28,6 +30,7 @@ import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.breezebppoddar.MonitorBroadcast
 import com.breezebppoddar.MultiFun
@@ -53,6 +56,7 @@ import com.breezebppoddar.features.contacts.CallHisDtls
 import com.breezebppoddar.features.dashboard.presentation.DashboardActivity
 import com.breezebppoddar.features.dashboard.presentation.SystemEventReceiver
 import com.breezebppoddar.features.dashboard.presentation.api.ShopVisitImageUploadRepoProvider
+import com.breezebppoddar.features.dashboard.presentation.model.AudioSyncModel
 import com.breezebppoddar.features.dashboard.presentation.model.ShopVisitImageUploadInputModel
 import com.breezebppoddar.features.gpsstatus.GpsReceiver
 import com.breezebppoddar.features.gpsstatus.LocationCallBack
@@ -116,6 +120,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
     //var mGoogleSignApiClient: GoogleSignInClient = null
 
+    private var notificationTitle: String = ""
     var mGoogleAPIClient: GoogleApiClient? = null
     private var mLocationRequest: LocationRequest? = null
     private var mLocationProvider: FusedLocationProviderApi? = null
@@ -251,10 +256,11 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         this.sendBroadcast(i)
     }
 
-    @SuppressLint("InvalidWakeLockTag")
+    @SuppressLint("InvalidWakeLockTag", "NewApi")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Timber.d("service_tag onStartCommand")
+        Timber.d("service_call_tag locationfuzedservice onStartCommand")
         super.onStartCommand(intent, flags, startId)
 //        XLog.d("onStartCommand" + " , " + " Time :" + AppUtils.getCurrentDateTime())
         Timber.d("onStartCommand" + " , " + " Time :" + AppUtils.getCurrentDateTime())
@@ -312,11 +318,17 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
 
             val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (Pref.IsUserWiseLMSFeatureOnly){
+                notificationTitle = "${AppUtils.hiFirstNameText()}, thanks for using MobiLearn."
+                //Pending push notification test
 
-            val notificationTitle = "${AppUtils.hiFirstNameText()}, thanks for using FSM App."
+            }else{
+                notificationTitle = "${AppUtils.hiFirstNameText()}, thanks for using FSM App."
+            }
+            //val notificationTitle = "${AppUtils.hiFirstNameText()}, thanks for using FSM App."
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channelId = AppUtils.notificationChannelId
+                /*val channelId = AppUtils.notificationChannelId
 
                 val channelName = AppUtils.notificationChannelName
                 val importance = NotificationManager.IMPORTANCE_HIGH
@@ -326,43 +338,70 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
                 notificationChannel.enableVibration(true)
                 notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
-               // println("puja")
+                // println("puja")
                 notificationManager.createNotificationChannel(notificationChannel)
 
                 val notification = NotificationCompat.Builder(this)
-                        .setContentTitle(notificationTitle)
-                        .setTicker("")
-                        .setContentText("")
-                        .setSmallIcon(R.drawable.ic_notifications_icon)
-                        .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-                        .setContentIntent(pendingIntent)
-                        .setOngoing(true)
-                        .setChannelId(channelId)
-                        .build()
+                    .setContentTitle(notificationTitle)
+                    .setTicker("")
+                    .setContentText("")
+                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
+                    .setChannelId(channelId)
+                    .build()
 
                 //notificationManager.notify(randInt, notificationBuilder.build());
 
-//                XLog.d("LocationFuzedService startForeground1 : Time :" + AppUtils.getCurrentDateTime())
                 try{
                     Timber.d("LocationFuzedService startForeground1 : Time :" + AppUtils.getCurrentDateTime())
                     startForeground(AppConstant.FOREGROUND_SERVICE, notification)
                     Timber.d("LocationFuzedService after startForeground1 : Time :" + AppUtils.getCurrentDateTime())
                 }catch (ex:Exception){
                     Timber.d("LocationFuzedService startForeground1 ex ${ex.localizedMessage} ${ex.message} : Time :" + AppUtils.getCurrentDateTime())
+                }*/
+
+                //new test code
+                var channelIDd = AppUtils.notificationChannelId
+                var channelNamee = AppUtils.notificationChannelName
+                val importancee = NotificationManager.IMPORTANCE_HIGH
+                val notiManagerr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                if(notiManagerr.getNotificationChannel(channelIDd) == null){
+                    val notiChannell = NotificationChannel(channelIDd, channelNamee, importancee).apply {
+                        enableLights(true)
+                        lightColor = applicationContext.getColor(R.color.colorPrimary)
+                        enableVibration(true)
+                        lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                    }
+                    notiManagerr.createNotificationChannel(notiChannell)
                 }
+
+                val notificationn = NotificationCompat.Builder(this, channelIDd)
+                    .setContentTitle(notificationTitle)
+                    .setTicker("")
+                    .setContentText("")
+                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
+                    .build()
+                //startForeground(AppConstant.FOREGROUND_SERVICE, notificationn,ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+                startForeground(AppConstant.FOREGROUND_SERVICE, notificationn)
+
 
             }
             else {
                 val notification = NotificationCompat.Builder(this)
-                        .setContentTitle(notificationTitle)
-                        .setTicker("")
-                        .setContentText("")
-                        .setSmallIcon(R.drawable.ic_notifications_icon)
-                        .setLargeIcon(
-                                Bitmap.createScaledBitmap(icon, 128, 128, false))
-                        .setContentIntent(pendingIntent)
-                        .setOngoing(true)
-                        .build()
+                    .setContentTitle(notificationTitle)
+                    .setTicker("")
+                    .setContentText("")
+                    .setSmallIcon(R.drawable.ic_notifications_icon)
+                    .setLargeIcon(
+                        Bitmap.createScaledBitmap(icon, 128, 128, false))
+                    .setContentIntent(pendingIntent)
+                    .setOngoing(true)
+                    .build()
                 //notificationManager.notify(randInt, notificationBuilder.build())
                 Timber.d("LocationFuzedService else startForeground2 : Time :" + AppUtils.getCurrentDateTime())
                 startForeground(AppConstant.FOREGROUND_SERVICE, notification)
@@ -675,6 +714,8 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onLocationChanged(location: Location) {
         Timber.d("service_tag onLocationChanged")
+        //Pref.IsShowDayStart = true
+        //Pref.DayStartMarked = true
         //return
 
       /*  try{
@@ -1023,6 +1064,8 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         Pref.logout_latitude = location.latitude.toString()
         Pref.logout_longitude = location.longitude.toString()
 
+        Timber.d("tag_loc_check logout_loc ${Pref.logout_latitude.toString()} ${Pref.logout_longitude.toString()}")
+
         showNotification()
 
         var accuracy = 0f
@@ -1108,6 +1151,9 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         if (Pref.user_id.isNullOrEmpty())
             return*/
 
+
+        syncAudioDataNew()
+
         //cancelShopDuration()
         accuracyStatus = "accurate"
         continueToAccurateFlow(location)
@@ -1127,10 +1173,55 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
 
         //rectifyUnknownLoc()
 
+
+
+
         val intent = Intent()
         intent.action = "UPDATE_PJP_LIST"
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
 
+    }
+
+    fun syncAudioDataNew(){
+        try {
+            if(!shouldAudioSync())
+                return
+            Timber.d("tag_sync_audio syncAudioDataNew call")
+            var unsyncAudioNw =  AppDatabase.getDBInstance()?.shopAudioDao()?.getUnsyncLForSyncedVisitRevisit(AppUtils.getCurrentDateForShopActi()) as ArrayList<ShopAudioEntity>
+            if(Pref.IsUserWiseRecordAudioEnableForVisitRevisit && unsyncAudioNw.size>0 && AppUtils.isOnline(this)){
+                var obj = unsyncAudioNw.get(0)
+                var objSync = AudioSyncModel()
+                objSync.user_id = Pref.user_id.toString()
+                objSync.session_token = Pref.session_token.toString()
+                objSync.shop_id = obj.shop_id
+                objSync.visit_datetime = obj.datetime
+                objSync.revisitORvisit = obj.revisitYN.toString()
+
+                val repository = ShopVisitImageUploadRepoProvider.provideAddShopRepository()
+                BaseActivity.compositeDisposable.add(
+                    repository.syncNewShopAudio(objSync, obj.audio_path, this)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({ result ->
+                            val logoutResponse = result as BaseResponse
+                            Timber.d("tag_sync_audio ${logoutResponse.status}")
+                            if (logoutResponse.status == NetworkConstant.SUCCESS) {
+                                AppDatabase.getDBInstance()!!.shopAudioDao().updateIsUploaded(true, obj.shop_id,obj.datetime)
+                                //syncAudioDataNew()
+                            } else {
+
+                            }
+                        }, { error ->
+                            (this as DashboardActivity).showSnackMessage(this.getString(R.string.unable_to_sync))
+
+                        })
+                )
+            }else{
+
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -2711,6 +2802,19 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         }
     }
 
+    private fun shouldAudioSync(): Boolean {
+        AppUtils.changeLanguage(this, "en")
+        return if (abs(System.currentTimeMillis() - Pref.prevShopAudioSyncTimeStamp) > 1000 * 60 * 5) {
+            Pref.prevShopAudioSyncTimeStamp = System.currentTimeMillis()
+            changeLocale()
+            true
+            //server timestamp is within 5 minutes of current system time
+        } else {
+            changeLocale()
+            false
+        }
+    }
+
     private fun shouldUpdateMeetingDuration(): Boolean {
         AppUtils.changeLanguage(this, "en")
         Timber.e("PREVIOUS MEETING SYNC API CALL TIME==================> " + getDateTimeFromTimeStamp(Pref.prevMeetingDurationTimeStamp))
@@ -2992,84 +3096,90 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
     }
 
     private fun saveAccurateData(location: UserLocationDataEntity, text: String) {
-        acuurateLat = location.latitude.toDouble()
-        acuurateLong = location.longitude.toDouble()
+        try {
+            acuurateLat = location.latitude.toDouble()
+            acuurateLong = location.longitude.toDouble()
 
 //        XLog.d("Pref.totalS2SDistance=====> " + Pref.totalS2SDistance)
-        Timber.d("Pref.totalS2SDistance=====> " + Pref.totalS2SDistance)
-        Pref.totalS2SDistance = (Pref.totalS2SDistance.toDouble() + location.distance.toDouble()).toString()
+            Timber.d("Pref.totalS2SDistance=====> " + Pref.totalS2SDistance)
+            Pref.totalS2SDistance = (Pref.totalS2SDistance.toDouble() + location.distance.toDouble()).toString()
 
-        /*val distance = (Pref.totalS2SDistance.toDouble() + location.distance.toDouble()).toString()
-        Pref.totalS2SDistance = String.format("%.2f", distance)*/
+            /*val distance = (Pref.totalS2SDistance.toDouble() + location.distance.toDouble()).toString()
+                Pref.totalS2SDistance = String.format("%.2f", distance)*/
 
-        location.visit_distance = Pref.visitDistance
-       // mantis 25637
-         /*if(Pref.IsRouteStartFromAttendance){
-            val list = AppDatabase.getDBInstance()!!.userLocationDataDao().getListAccordingDate(AppUtils.getCurrentDateForShopActi())
-            if(list.size==0){
-                    location.locationName = "Attend from  " + location.locationName
+            location.visit_distance = Pref.visitDistance
+            // mantis 25637
+            /*if(Pref.IsRouteStartFromAttendance){
+                  val list = AppDatabase.getDBInstance()!!.userLocationDataDao().getListAccordingDate(AppUtils.getCurrentDateForShopActi())
+                  if(list.size==0){
+                          location.locationName = "Attend from  " + location.locationName
+                      }
+                  }*/
+
+            //begin distance correction
+            try{
+                val locList = AppDatabase.getDBInstance()!!.userLocationDataDao().getLocationUpdateForADay(AppUtils.getCurrentDateForShopActi())
+                if (locList != null && locList.isNotEmpty()) {
+                    var obj = locList.get(locList.size-1)
+                    var prevDateTime = obj.updateDateTime
+                    var savingDateTime = location.updateDateTime
+                    var diffInMin = AppUtils.getDiffDateTime(prevDateTime.toString(),savingDateTime.toString())
+                    Timber.d("LocFuzed final loc data diffInMin: $diffInMin  location.distance ${location.distance}" )
+                    println("tag_x_dist diffInMin: $diffInMin  location.distance ${location.distance} lat:long ${location.latitude},${location.longitude}")
+                    //mantis id 27172 begin
+                    if(diffInMin<3 && location.distance.toDouble().toInt()>8){
+                        location.distance = ((AppUtils.maxDistance.toDouble()/1000)*diffInMin).toString()
+                        Timber.d("LocFuzed final loc data inside if diffInMin: $diffInMin  location.distance ${location.distance}" )
+                        println("tag_x_dist inside if diffInMin: $diffInMin  location.distance ${location.distance} lat:long ${location.latitude},${location.longitude}")
+                    }
+                    //mantis id 27172 end
                 }
-            }*/
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                Timber.d("error loccc : ${ex.printStackTrace()}")
+            }
+            //end distance correction
 
-        //begin distance correction
-        try{
-            val locList = AppDatabase.getDBInstance()!!.userLocationDataDao().getLocationUpdateForADay(AppUtils.getCurrentDateForShopActi())
-            if (locList != null && locList.isNotEmpty()) {
-                var obj = locList.get(locList.size-1)
-                var prevDateTime = obj.updateDateTime
-                var savingDateTime = location.updateDateTime
-                var diffInMin = AppUtils.getDiffDateTime(prevDateTime.toString(),savingDateTime.toString())
-                Timber.d("LocFuzed final loc data diffInMin: $diffInMin  location.distance ${location.distance}" )
-                println("tag_x_dist diffInMin: $diffInMin  location.distance ${location.distance} lat:long ${location.latitude},${location.longitude}")
-                //mantis id 27172 begin
-                if(diffInMin<3 && location.distance.toDouble().toInt()>8){
-                    location.distance = ((AppUtils.maxDistance.toDouble()/1000)*diffInMin).toString()
-                    Timber.d("LocFuzed final loc data inside if diffInMin: $diffInMin  location.distance ${location.distance}" )
-                    println("tag_x_dist inside if diffInMin: $diffInMin  location.distance ${location.distance} lat:long ${location.latitude},${location.longitude}")
+            Timber.d(" save loc ${location.latitude} ${location.longitude} ${location.distance}")
+
+
+            println("distance_loc_tag insert accu loc ${location.locationId} ${location.latitude} ${location.longitude} ${location.distance}")
+            //Timber.d("distance_loc_tag ${location.locationId} ${location.latitude} ${location.longitude} ${location.distance}")
+
+            //negative distance handle Suman 06-02-2024 mantis id 0027225 begin
+            try{
+                var distReftify = location.distance.toDouble()
+                if(distReftify<0){
+                    var locL = AppDatabase.getDBInstance()!!.userLocationDataDao().getLocationUpdateForADay(AppUtils.getCurrentDateForShopActi()) as ArrayList<UserLocationDataEntity>
+                    var lastLoc = locL.get(locL.size-1)
+                    var d = LocationWizard.getDistance(location.latitude.toDouble(),location.longitude.toDouble(), lastLoc.latitude.toDouble()   ,lastLoc.longitude.toDouble())
+                    location.distance = d.toString()
                 }
-                //mantis id 27172 end
+            }catch (ex:Exception){
+                ex.printStackTrace()
+                location.distance = "0.0"
+                Timber.d("error loc : ${ex.printStackTrace()}")
             }
-        }catch (ex:Exception){
-            ex.printStackTrace()
-        }
-        //end distance correction
-
-        Timber.d(" save loc ${location.latitude} ${location.longitude} ${location.distance}")
+            //negative distance handle Suman 06-02-2024 mantis id 0027225 end
 
 
-        println("distance_loc_tag insert accu loc ${location.locationId} ${location.latitude} ${location.longitude} ${location.distance}")
-        //Timber.d("distance_loc_tag ${location.locationId} ${location.latitude} ${location.longitude} ${location.distance}")
-
-        //negative distance handle Suman 06-02-2024 mantis id 0027225 begin
-        try{
-            var distReftify = location.distance.toDouble()
-            if(distReftify<0){
-                var locL = AppDatabase.getDBInstance()!!.userLocationDataDao().getLocationUpdateForADay(AppUtils.getCurrentDateForShopActi()) as ArrayList<UserLocationDataEntity>
-                var lastLoc = locL.get(locL.size-1)
-                var d = LocationWizard.getDistance(location.latitude.toDouble(),location.longitude.toDouble(), lastLoc.latitude.toDouble()   ,lastLoc.longitude.toDouble())
-                location.distance = d.toString()
+            // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update begin
+            if(Pref.IsRouteUpdateForShopUser == false){
+                location.isUploaded = true
             }
-        }catch (ex:Exception){
-            ex.printStackTrace()
-            location.distance = "0.0"
-        }
-        //negative distance handle Suman 06-02-2024 mantis id 0027225 end
+            // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update end
 
-
-        // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update begin
-        if(Pref.IsRouteUpdateForShopUser == false){
-            location.isUploaded = true
-        }
-        // 13.0 LocationFuzedService v 4.2.6 Suman 08/05/2024 mantis 0027427 location sync update end
-
-        AppDatabase.getDBInstance()!!.userLocationDataDao().insertAll(location) // save accurate data
+            AppDatabase.getDBInstance()!!.userLocationDataDao().insertAll(location) // save accurate data
 //        XLog.d("Shop to shop distance (At accurate loc save time)====> " + Pref.totalS2SDistance)
-        Timber.d("Shop to shop distance (At accurate loc save time)====> " + Pref.totalS2SDistance + " "+location.time)
+            Timber.d("Shop to shop distance (At accurate loc save time)====> " + Pref.totalS2SDistance + " "+location.time)
 //        XLog.d(text)
-        Timber.d(text)
+            //Timber.d(text)
 
-        assumedDistanceCover = AppUtils.maxDistance.toDouble()
-        mLastLocationForAssumtion = mLastLocation
+            assumedDistanceCover = AppUtils.maxDistance.toDouble()
+            mLastLocationForAssumtion = mLastLocation
+        } catch (e: Exception) {
+            Timber.d("error loc save : ${e.printStackTrace()}")
+        }
     }
 
 

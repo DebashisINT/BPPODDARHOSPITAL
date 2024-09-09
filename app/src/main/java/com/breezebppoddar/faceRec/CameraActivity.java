@@ -460,14 +460,14 @@ public abstract class CameraActivity extends AppCompatActivity
       if (shouldShowRequestPermissionRationale(PERMISSION_CAMERA)) {
         Toast.makeText(
                 CameraActivity.this,
-                "Camera permission is required for this breezefieldsalesdemo",
+                "Camera permission is required for this breezebppoddar",
                 Toast.LENGTH_LONG)
             .show();
       }
       if (shouldShowRequestPermissionRationale(PERMISSION_EXTERNAL)) {
         Toast.makeText(
                 CameraActivity.this,
-                "Read permission is required for this breezefieldsalesdemo",
+                "Read permission is required for this breezebppoddar",
                 Toast.LENGTH_LONG)
                 .show();
       }

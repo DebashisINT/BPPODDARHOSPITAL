@@ -220,4 +220,10 @@ class ConfigFetchResponseModel : BaseResponse() {
     var firebase_k:String? = ""
     //end mantis id 0027298 firebase_k functionality Puja 08-05-2024  v4.2.7
 
+    //begin mantis id 0027683 QuestionAfterNoOfContentForLMS functionality Puja 05-08-2024  v4.2.9
+    var QuestionAfterNoOfContentForLMS:String? = ""
+    //end mantis id 0027683 QuestionAfterNoOfContentForLMS functionality Puja 05-08-2024  v4.2.9
+
+    var IsAllowGPSTrackingInBackgroundForLMS:Boolean? = false
+
 }

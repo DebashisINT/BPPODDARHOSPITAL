@@ -12,7 +12,8 @@
     <string name="select_products" translatable="false">Select Product(s)</string>
     <!--Map Key-->
     <!--<string name="MAP_ProjectAPIKey">AIzaSyBRrqsLZFqThqM8uxw_k94pZMbv3-3h0dM</string>-->
-    <string name="MAP_ProjectAPIKey" translatable="false">AIzaSyB2NlHQ8pi7J8URzHw_1cK0v1Gj6gGj1uc</string>
+    <!--<string name="MAP_ProjectAPIKey" translatable="false">AIzaSyCbYMZjnt8T6yivYfIa4_R9oy-L3SIYyrQ</string>-->
+    <string name="MAP_ProjectAPIKey" translatable="false">AIzaSyDbsL6dMddy2DsjsVzhr_qJe-jWoBLcdLo</string>
     <string name="facebook_app_id" translatable="false">260734547001450</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb260734547001450</string>
 
@@ -30,10 +31,6 @@
     <string name="login_net_disconnected" translatable="false">Internet is disconnected, you cannot login, please switch on the internet.</string>
     <string name="login_net_disconnected1" translatable="false">Please switch on the internet.</string>
     <string name="remember_me" translatable="false">Remember me</string>
-
-    <string name="loc_msg_new_new" translatable="false">Field Sales Management App collects location data after you open and login into the App, to identify nearby Parties location even when the app is running in the background and not in use.This app collects location data to enable nearby shops, GPS route,
- even when the app is closed or not in use.Reimbursement is issued with distance traveled for specific GPS route.
- \nThis is a core functionality of this app.</string>
 
     <!--Menu-->
     <string name="add_order" translatable="false">Add Order</string>
@@ -158,6 +155,7 @@
     <string name="device_info" translatable="false">Device Info.</string>
     <string name="permission_info" translatable="false">Permission Info.</string>
     <string name="micro_learning" translatable="false">Micro Learning</string>
+    <string name="my_learning" translatable="false">My Learning</string>
     <string name="training_contents" translatable="false">Training Contents</string>
     <string name="My_Jobs" translatable="false">My Jobs</string>
     <string name="service_history" translatable="false">Service History</string>
@@ -441,7 +439,7 @@
     <string name="email" translatable="false">Email ID</string>
 
 
-    <!--breezefieldsalesdemo-->
+    <!--breezebppoddar-->
     <string name="sample_user_name" translatable="false">Mr. Kinsuk Roy</string>
     <string name="sample_login" translatable="false">Logged in at 10:55 AM</string>
     <string name="sample_location" translatable="false">You have covered the distance of 3 KM in last hour </string>
@@ -502,6 +500,7 @@
     <string name="functionality_disabled" translatable="false">Feature coming soon&#8230;</string>
     <!--<string name="functionality_disabled">Functionality Disabled</string>-->
     <string name="ok" translatable="false">Ok</string>
+    <string name="i_agree" translatable="false">I Agree</string>
     <string name="cancel" translatable="false">Cancel</string>
     <string name="confirm_logout" translatable="false">Select Ok to confirm Logout.</string>
     <string name="alert_logout" translatable="false">Please logout to continue.</string>
@@ -589,7 +588,9 @@
     <string name="valid_sddress" translatable="false">Please enter a valid address</string>
     <string name="no_internet" translatable="false">Please check your internet connection.</string>
     <string name="alert_nolocation" translatable="false">Please enable your device location.</string>
-    <string name="branch_select" translatable="false">Select branch</string>
+    <string name="branch_select" translatable="false">Please select Branch.</string>
+    <string name="opt_sucs" translatable="false">Opportunity saved successfully</string>
+    <string name="opt_updt" translatable="false">Opportunity updated successfully</string>
     <string name="no_branch" translatable="false">No branch here</string>
     <string name="something_went_wrong" translatable="false">Something went wrong. Please try again later</string>
     <string name="something_went_wrong_new" translatable="false">Something went wrong. Please try again later..</string>
@@ -1444,6 +1445,9 @@
     <string name="loc_msg_new" translatable="false">Field Sales Management App collects location data after you open and login into the App,\u0020to identify nearby Parties location even when the app is running in the background and not in use.This app collects location data to enable nearby shops, GPS route,
         even when the app is closed or not in use.</string>
 
+    <string name="loc_msg_new_new" translatable="false">Field Sales Management App collects location data after you open and login into the App, to identify nearby Parties location even when the app is running in the background and not in use.This app collects location data to enable nearby shops, GPS route,
+ even when the app is closed or not in use.Reimbursement is issued with distance traveled for specific GPS route.
+ \nThis is a core functionality of this app.</string>
 
     <!--My Jobs-->
     <string name="view_details" translatable="false">View Details</string>
@@ -1501,7 +1505,7 @@
     <string name="error_enter_canceled_by" translatable="false">Please enter cancelled by</string>
 
 
-    <string name="tfe_od_app_name" translation_description="Object Detection breezefieldsalesdemo app [CHAR_LIMIT=40]">Face Recognition</string>
+    <string name="tfe_od_app_name" translation_description="Object Detection breezebppoddar app [CHAR_LIMIT=40]">Face Recognition</string>
     <string name="tfe_od_camera_error" translation_description="Error regarding camera support[CHAR_LIMIT=40]">This device doesn\'t support Camera2 API.</string>
     <string name="label_install_anydesk" translatable="false">Install Anydesk</string>
     <string name="label_open_anydesk" translatable="false">Open Anydesk</string>
@@ -1516,6 +1520,10 @@
     <string name="Start" translatable="false">START</string>
     <string name="dd_visit" translatable="false">Point Visit</string>
     <string name="new_order_scr_list" translatable="false">Order  Details</string>
+    <string name="new_oppt_scr_list" translatable="false">Opportunities</string>
+    <!--
+    <string name="new_oppt_scr_add" translatable="false">Add Opportunity</string>
+-->
 
 
     <string name="error_message_remarks_manadatory" translatable="false">Please put the remarks</string>
@@ -1592,10 +1600,10 @@
     <string name="historys" translatable="false">Historys</string>
     <!--<string name="firebase_key" translatable="false">key=AAAAIoWfCpc:APA91bEMOPyfjsyziPC1WYJiPHjzdmTQJmAOKP0fM24iXI9BgrmyhH4uLY6Jd-6Lpjp8mvSdpSp-zm20ApTOYQ3Ean4m6LicJ5CoECS_v5u2PUAwA8E6FLsu2ZC6_WxuSYnTTLzlUi4E</string>-->
 
-    <string name="PART_1" translatable="false">key=AAAAsj8VQb0:APA91bFtbSC5rP3NIqVAT-</string>
-    <string name="PART_2" translatable="false">DVVjKiqqPDXZfiKgGbJAMH6w51BCUcZTRr7hkr3sH4a</string>
-    <string name="PART_3" translatable="false">Z5A4Xt7-nW4ZKPYW-dab9fFKcIbN_FiQnTcdrFLWZY6</string>
-    <string name="PART_4" translatable="false">nVmDd1A0j7BH56e8JaZl9WzHQTiQrRjq</string>
+    <string name="PART_1" translatable="false">key=AAAA8_ptc9A:APA91bGhMaxl_Mm811bpvNExTIyZZz16krSTnC</string>
+    <string name="PART_2" translatable="false">Ap1RpbRKV8hZuIh9gsI6svxMvZO74WaZl3piBPH</string>
+    <string name="PART_3" translatable="false">Jzp2N3NN3JRS8a150BAmyLnwqa7nJUFay</string>
+    <string name="PART_4" translatable="false">_kxNm11dQfdDCl00QUPncGCKq1kPYH</string>
 
     <string name="GenderTextNewOrd" translatable="false">Gender</string>
     <string name="ProductTextNewOrd" translatable="false">Product Type</string>

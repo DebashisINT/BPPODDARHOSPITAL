@@ -75,8 +75,9 @@ import com.breezebppoddar.features.taskManagement.model.TaskManagmentEntity
     VisitRevisitWhatsappStatus::class,CallHisEntity::class,CompanyMasterEntity::class,TypeMasterEntity::class,StatusMasterEntity::class,SourceMasterEntity::class,StageMasterEntity::class,TeamListEntity::class,
     ContactActivityEntity::class,ScheduleTemplateEntity::class,ModeTemplateEntity::class,RuleTemplateEntity::class,SchedulerMasterEntity::class,
     SchedulerDateTimeEntity::class,SchedulerContactEntity::class,TeamAllListEntity::class,PhoneContactEntity::class,PhoneContact1Entity::class,
-    NewProductListEntity::class, NewRateListEntity::class, NewOrderDataEntity::class,NewOrderProductDataEntity::class),
-        version = 1, exportSchema = false)
+    NewProductListEntity::class, NewRateListEntity::class, NewOrderDataEntity::class,NewOrderProductDataEntity::class,OpportunityStatusEntity::class,OpportunityAddEntity::class,OpportunityProductEntity::class,LmsUserInfoEntity::class,
+    ShopAudioEntity::class,LMSNotiEntity::class),
+        version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun addShopEntryDao(): AddShopDao
@@ -240,6 +241,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun newRateListDao(): NewRateListDao
     abstract fun newOrderDataDao(): NewOrderDataDao
     abstract fun newOrderProductDataDao(): NewOrderProductDataDao
+    abstract fun opportunityStatusDao(): OpportunityStatusDao
+    abstract fun opportunityAddDao(): OpportunityAddDao
+    abstract fun opportunityProductDao(): OpportunityProductDao
+    abstract fun lmsUserInfoDao(): LmsUserInfoDao
+    abstract fun shopAudioDao(): ShopAudioDao
+    abstract fun lmsNotiDao(): LMSNotiDao
 
 
     companion object {
@@ -251,7 +258,7 @@ abstract class AppDatabase : RoomDatabase() {
                         // allow queries on the main thread.
                         // Don't do this on a real app! See PersistenceBasicSample for an example.
                         .allowMainThreadQueries()
-                        .addMigrations()
+                        .addMigrations(MIGRATION_1_2)
 //                        .fallbackToDestructiveMigration()
                         .build()
             }
@@ -266,11 +273,21 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE = null
         }
 
+        val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("create table lms_notification (sl_no INTEGER NOT NULL PRIMARY KEY,noti_datetime TEXT NOT NULL," +
+                        "noti_date TEXT NOT NULL,noti_time TEXT NOT NULL,noti_header TEXT NOT NULL,noti_message TEXT NOT NULL, isViwed INTEGER NOT NULL DEFAULT 0)")
+
+                database.execSQL("ALTER TABLE LMS_USER_INFO ADD COLUMN isUploaded INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE LMS_USER_INFO ADD COLUMN isCalculated INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE LMS_USER_INFO ADD COLUMN module_startTimeInMilli TEXT NOT NULL DEFAULT '' ")
+                database.execSQL("ALTER TABLE LMS_USER_INFO ADD COLUMN module_endTimeInMilli TEXT NOT NULL DEFAULT '' ")
+
+                database.execSQL("ALTER TABLE shop_audio ADD COLUMN revisitYN TEXT NOT NULL DEFAULT '0' ")
+
+            }
+        }
 
     }
-
-
-//}
-
 
 }

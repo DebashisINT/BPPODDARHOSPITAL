@@ -22,6 +22,7 @@ data class TeamAllListRes(var member_list:ArrayList<TeamAllListEntity>):BaseResp
 
 
 data class CustomData(var id:String="",var name:String="")
+data class CustomDataLms(var id:String="",var name:String="",var topic_parcentage:Int=0)
 data class CustomDataForAssignedto(var id:String="",var name:String="",var number:String="")
 
 data class SourceMasterRes(var source_list:ArrayList<SourceMasterEntity>):BaseResponse()
@@ -35,4 +36,4 @@ data class CompanyName(var company_name:String="")
 
 data class AutoMailDtls(var automail_sending_email:String="",var automail_sending_pass:String="",var recipient_email_ids:String=""):BaseResponse()
 
-
+data class ProductDtls(var product_id:String="",var product_name:String="",var isTick:Boolean = false)

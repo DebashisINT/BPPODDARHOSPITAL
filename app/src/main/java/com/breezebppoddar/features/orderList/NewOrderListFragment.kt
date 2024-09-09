@@ -717,7 +717,7 @@ class NewOrderListFragment : BaseFragment() {
         var fileName = "FTS"+ "_" + obj.order_id
         fileName = fileName.replace("/", "_")
 
-        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +"/breezefieldsalesdemoApp/ORDERDETALIS/"
+        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() +"/breezebppoddarApp/ORDERDETALIS/"
 
         var pathNew = ""
 

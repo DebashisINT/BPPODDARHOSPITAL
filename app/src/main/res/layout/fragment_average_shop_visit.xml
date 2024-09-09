@@ -158,7 +158,6 @@
                 android:layout_height="wrap_content" />
 
             <com.breezebppoddar.widgets.AppCustomTextView
-                android:visibility="gone"
                 android:id="@+id/sync_all_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

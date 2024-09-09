@@ -178,7 +178,7 @@ open class BaseActivity : AppCompatActivity(), GpsStatusDetector.GpsStatusDetect
             Pref.isAutoLogout = false*/
 
       //  Pref.isAutoLogout=true
-        if (Pref.isAutoLogout) {
+        if (Pref.isAutoLogout && Pref.IsUserWiseLMSFeatureOnly==false) {
             //Pref.isAddAttendence = false
             //Pref.DayStartMarked = false
             //Pref.DayEndMarked = false
@@ -1205,12 +1205,8 @@ fun serviceStatusActionable() {
             return
         }
         val serviceLauncher = Intent(this, LocationFuzedService::class.java)
-        Timber.d("TAG_CHECK_LOC_SERVICE_STATUS")
-
         if (Pref.user_id != null && Pref.user_id!!.isNotEmpty()) {
-
             Timber.e("MID: 26980 in serviceStatusActionable method if user_id is not null")
-
             startMonitorService()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
@@ -1401,6 +1397,7 @@ override fun onDestroy() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 fun startMonitorService() {
+    return
     if (!isMonitorServiceRunning()) {
         try{
             //        XLog.d("MonitorService Started : " + " Time :" + AppUtils.getCurrentDateTime())
@@ -1741,7 +1738,7 @@ val revisitStatusList : MutableList<ShopRevisitStatusRequestData> = ArrayList()
         BaseActivity.isShopActivityUpdating = true
 /////////////
         revisitStatusList.clear()
-        for(i in 0..shopDataList?.size-1){
+        for(i in 0..shopDataList?.size!!-1){
             var data=AppDatabase.getDBInstance()?.shopVisitOrderStatusRemarksDao()!!.getSingleItem(shopDataList?.get(i)?.shop_revisit_uniqKey!!.toString())
             if(data!=null ){
                 var revisitStatusObj= ShopRevisitStatusRequestData()
@@ -1776,7 +1773,7 @@ val revisitStatusList : MutableList<ShopRevisitStatusRequestData> = ArrayList()
                                 if(!revisitStatusList.isEmpty()){
                                     callRevisitStatusUploadApi(revisitStatusList!!)
                                 }
-                                for(i in 0..shopDataList?.size-1){
+                                for(i in 0..shopDataList?.size!!-1){
                                     callCompetetorImgUploadApi(shopDataList?.get(i)?.shop_id!!)
                                 }
 
@@ -2010,7 +2007,7 @@ val revisitStatusList : MutableList<ShopRevisitStatusRequestData> = ArrayList()
         ////////
         revisitStatusList.clear()
         var key:String = ""
-        for(i in 0..list_?.size-1){
+        for(i in 0..list_?.size!!-1){
             if(list_.get(i).shopid.equals(shopId)){
                 key=list_.get(i).shop_revisit_uniqKey!!.toString()
             }

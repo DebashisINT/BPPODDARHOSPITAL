@@ -172,6 +172,16 @@
                 android:visibility="gone"
                 android:padding="@dimen/_5sdp" />
 
+            <ImageView
+                android:id="@+id/add_bookmark"
+                android:layout_width="@dimen/_27sdp"
+                android:layout_height="@dimen/_27sdp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_bookmark_fill"
+                android:visibility="gone"
+                android:tint="@color/white"
+                android:padding="@dimen/_5sdp" />
+
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -377,6 +387,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
+                android:text="Dashboard"
                 android:gravity="center"
                 android:paddingTop="@dimen/_3sdp"
                 android:paddingBottom="@dimen/_3sdp"

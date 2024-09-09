@@ -23,6 +23,7 @@ import com.marcinmoskala.kotlinpreferences.PreferenceHolder
 // 15.0 Pref v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
 // 16.0 Pref v 4.1.6 Tufan 07/09/2023 mantis 26785 Multi visit Interval in Minutes Against the Same Shop
 //Begin 16.0 Pref v 4.1.6 Tufan 21/09/2023 mantis 26812 AND 26813  FSSAI Lic No and GSTINPANMandatoryforSHOPTYPE4 In add shop page edit
+//Rev 17.0 Pref v 4.2.8 Suman 25/06/2024 mantis 27575
 
 object Pref : PreferenceHolder() {
     var text: String? by bindToPreferenceFieldNullable()
@@ -1037,8 +1038,64 @@ object Pref : PreferenceHolder() {
     var firebase_k : String by bindToPreferenceField("", "firebase_k")
     //end mantis id 0027432 loc_k & firebase_k functionality Puja 08-05-2024 v4.2.7
     var IsRouteUpdateForShopUser : Boolean by bindToPreferenceField(true, "IsRouteUpdateForShopUser")
-
     var isCallLogHintPermissionGranted: Boolean by bindToPreferenceField(false, "isCallLogHintPermissionGranted")
+
+    var IsShowCRMOpportunity: Boolean by bindToPreferenceField(false, "IsShowCRMOpportunity")
+    var IsEditEnableforOpportunity: Boolean by bindToPreferenceField(false, " IsEditEnableforOpportunity")
+    var IsDeleteEnableforOpportunity: Boolean by bindToPreferenceField(false, "IsDeleteEnableforOpportunity")
+
+
+    var IsCRMPhonebookSyncEnable: Boolean by bindToPreferenceField(true, "IsCRMPhonebookSyncEnable")
+    var IsCRMSchedulerEnable: Boolean by bindToPreferenceField(true, "IsCRMSchedulerEnable")
+    var IsCRMAddEnable: Boolean by bindToPreferenceField(true, "IsCRMAddEnable")
+    var IsCRMEditEnable: Boolean by bindToPreferenceField(true, "IsCRMEditEnable")
+
+    //Rev 17.0 Pref v 4.2.8 Suman 25/06/2024 mantis 27575
+    var IsUserWiseLMSEnable: Boolean by bindToPreferenceField(false, "IsUserWiseLMSEnable")
+    var IsUserWiseLMSFeatureOnly: Boolean by bindToPreferenceField(false, "IsUserWiseLMSFeatureOnly")
+
+    var IsAlarmServiceRestartCalled: Boolean by bindToPreferenceField(false, "IsAlarmServiceRestartCalled")
+
+    //Suman 27-07-2024 mantis id 27647
+    var IsUserWiseRecordAudioEnableForVisitRevisit: Boolean by bindToPreferenceField(false, "IsUserWiseRecordAudioEnableForVisitRevisit")
+
+    var prevShopAudioSyncTimeStamp: Long by bindToPreferenceField(0, "prevShopAudioSyncTimeStamp")
+
+    var QuestionAfterNoOfContentForLMS: String by bindToPreferenceField("1", "QuestionAfterNoOfContentForLMS")
+
+    var videoCompleteCount: String by bindToPreferenceField("0", "videoCompleteCount")
+
+    var like_count: Int by bindToPreferenceField(0, "like_count")
+
+    var share_count: Int by bindToPreferenceField(0, "share_count")
+
+    var comment_count: Int by bindToPreferenceField(0, "comment_count")
+
+    var correct_answer_count: Int by bindToPreferenceField(0, "correct_answer_count")
+
+    var wrong_answer_count: Int by bindToPreferenceField(0, "wrong_answer_count")
+
+    var content_watch_count: Int by bindToPreferenceField(0, "content_watch_count")
+
+    var FirstLogiForTheDayTag: Boolean by bindToPreferenceField(true, "FirstLogiForTheDayTag")
+
+
+
+
+
+    var LastVideoPlay_TopicID : String by bindToPreferenceField("", "LastVideoPlay_TopicID")
+    var LastVideoPlay_TopicName : String by bindToPreferenceField("", "LastVideoPlay_TopicName")
+    var LastVideoPlay_ContentID : String by bindToPreferenceField("", "LastVideoPlay_ContentID")
+    var LastVideoPlay_ContentName : String by bindToPreferenceField("", "LastVideoPlay_ContentName")
+    var LastVideoPlay_VidPosition : String by bindToPreferenceField("", "LastVideoPlay_VidPosition")
+    var LastVideoPlay_BitmapURL : String by bindToPreferenceField("", "LastVideoPlay_BitmapURL")
+    var LastVideoPlay_ContentDesc : String by bindToPreferenceField("", "LastVideoPlay_ContentDesc")
+   // var LastVideoPlay_ContentParcentBar : String by bindToPreferenceField("", "LastVideoPlay_ContentParcentBar")
+    var LastVideoPlay_ContentParcent : String by bindToPreferenceField("", "LastVideoPlay_ContentParcent")
+   // var LastVideoPlay_ContentParcentStatus : String by bindToPreferenceField("", "LastVideoPlay_ContentParcentStatus")
+
+    var IsAllowGPSTrackingInBackgroundForLMS: Boolean by bindToPreferenceField(true, "IsAllowGPSTrackingInBackgroundForLMS")
+
 }
 
 

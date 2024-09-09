@@ -18,12 +18,18 @@ class NetworkConstant {
     //Base URL
     companion object {
 
+        //var BASE_URL = "http://fts.indusnettechnologies.com:8094/API/"
+        //var ADD_SHOP_BASE_URL = "http://fts.indusnettechnologies.com:8094/"
+
+        //var BASE_URL = "http://fts1.indusnettechnologies.com:7001/API/"
+        //var ADD_SHOP_BASE_URL = "http://fts1.indusnettechnologies.com:7001/"
+
+        //LMS
         var BASE_URL = "http://fts.indusnettechnologies.com:7036/API/"
         var ADD_SHOP_BASE_URL = "http://fts.indusnettechnologies.com:7036/"
 
         //var BASE_URL = "http://3.7.30.86:8072/API/"
         //var ADD_SHOP_BASE_URL = "http://3.7.30.86:8072/"
-
 
         //var BASE_URL = "http://localhost:8081/API/"
         //var ADD_SHOP_BASE_URL = "http://localhost:8081/"
@@ -50,7 +56,7 @@ class NetworkConstant {
 //         var BASE_URL="http://hrms.indusnettechnologies.com:7025/API/"
 //         var ADD_SHOP_BASE_URL="http://hrms.indusnettechnologies.com:7025"
 
-        /*breezefieldsalesdemo INTERNAL*/
+        /*breezebppoddar INTERNAL*/
 //        var BASE_URL="http://geapl.breezeerp.in:8083/API/"
 //        var ADD_SHOP_BASE_URL="http://geapl.breezeerp.in:8083/"
 

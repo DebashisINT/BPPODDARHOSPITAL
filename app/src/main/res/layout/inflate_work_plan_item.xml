@@ -32,7 +32,7 @@
                 <View
                     android:id="@+id/view"
                     android:layout_width="5dp"
-                    android:layout_height="@dimen/_76sdp"
+                    android:layout_height="@dimen/_56sdp"
                     android:background="@drawable/left_rounded_corner_view_bg"
                     android:layout_marginLeft="1.7dp"
                     android:layout_marginTop="@dimen/_1sdp"
@@ -122,7 +122,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/shop_name_TV"
-                        android:text="@string/dashboard_breezefieldsalesdemo_address"
+                        android:text="@string/dashboard_breezebppoddar_address"
                         android:textColor="@color/login_txt_color"
                         android:textSize="@dimen/_9sdp"
                         android:layout_marginTop="@dimen/_2sdp"/>-->

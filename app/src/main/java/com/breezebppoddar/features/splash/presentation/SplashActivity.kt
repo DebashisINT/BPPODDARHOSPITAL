@@ -2,7 +2,6 @@ package com.breezebppoddar.features.splash.presentation
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.Dialog
 import android.content.ComponentName
@@ -10,24 +9,27 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
+import android.media.MediaMetadataRetriever
+import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.*
+import android.provider.MediaStore
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationManagerCompat
+import androidx.lifecycle.lifecycleScope
 import com.breezebppoddar.BuildConfig
 import com.breezebppoddar.R
-import com.breezebppoddar.app.AppDatabase
 import com.breezebppoddar.app.NetworkConstant
 import com.breezebppoddar.app.Pref
-import com.breezebppoddar.app.domain.AddShopDBModelEntity
-import com.breezebppoddar.app.domain.CallHisEntity
 import com.breezebppoddar.app.uiaction.DisplayAlert
 import com.breezebppoddar.app.utils.AppUtils
 import com.breezebppoddar.app.utils.FileLoggingTree
@@ -40,24 +42,32 @@ import com.breezebppoddar.features.commondialog.presentation.CommonDialogClickLi
 import com.breezebppoddar.features.commondialogsinglebtn.CommonDialogSingleBtn
 import com.breezebppoddar.features.commondialogsinglebtn.OnDialogClickListener
 import com.breezebppoddar.features.dashboard.presentation.DashboardActivity
-import com.breezebppoddar.features.location.LocationWizard
 import com.breezebppoddar.features.location.SingleShotLocationProvider
+import com.breezebppoddar.features.login.api.global_config.ConfigFetchRepoProvider
+import com.breezebppoddar.features.login.model.globalconfig.ConfigFetchResponseModel
 import com.breezebppoddar.features.login.presentation.LoginActivity
-import com.breezebppoddar.features.nearbyshops.presentation.ShopCallHisFrag
 import com.breezebppoddar.features.splash.presentation.api.VersionCheckingRepoProvider
 import com.breezebppoddar.features.splash.presentation.model.VersionCheckingReponseModel
 import com.breezebppoddar.widgets.AppCustomTextView
-
+import com.itextpdf.text.pdf.PdfFileSpecification.url
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.fragment_new_order_screen_activity.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.alexandroid.gps.GpsStatusDetector
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import timber.log.Timber
-import java.io.File
+import java.io.IOException
+import java.io.InputStream
+import java.net.URL
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import kotlin.system.exitProcess
 
 
@@ -74,38 +84,49 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     private var mGpsStatusDetector: GpsStatusDetector? = null
     private lateinit var progress_wheel: com.pnikosis.materialishprogress.ProgressWheel
 
+    private lateinit var locDiscloserDialog: Dialog
+
     var permList = mutableListOf<PermissionDetails>()
     var permListDenied = mutableListOf<PermissionDetails>()
+
     data class PermissionDetails(var permissionName: String, var permissionTag: Int)
 
-    private lateinit var locDiscloserDialog : Dialog
-
-//test
+    //test
     @SuppressLint("SuspiciousIndentation", "WrongConstant")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-   /* var fir:File = File(applicationContext.filesDir,"OPLOG")
-    val filename = "OPLOG"
-    val fileContents = "Hello world! ${AppUtils.getCurrentDateTime()}"
-    applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use {
-        it.write(fileContents.toByteArray())
-    }
-    applicationContext.deleteFile(filename)
+        /* var fir:File = File(applicationContext.filesDir,"OPLOG")
+         val filename = "OPLOG"
+         val fileContents = "Hello world! ${AppUtils.getCurrentDateTime()}"
+         applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use {
+             it.write(fileContents.toByteArray())
+         }
+         applicationContext.deleteFile(filename)
 
-    applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use {
-        it.write(fileContents.toByteArray())
-    }*/
+         applicationContext.openFileOutput(filename, Context.MODE_PRIVATE).use {
+             it.write(fileContents.toByteArray())
+         }*/
 
-    /*FileLoggingTree.context = this.applicationContext*/
+        /*FileLoggingTree.context = this.applicationContext*/
 
-    Timber.plant(Timber.DebugTree())
-    Timber.plant(FileLoggingTree())
+        Timber.plant(Timber.DebugTree())
+        Timber.plant(FileLoggingTree())
+
+        /*val mediaMetadataRetriever = MediaMetadataRetriever()
+        mediaMetadataRetriever.setDataSource("http://3.7.30.86:8073/Commonfolder/LMS/ContentUpload/Sell Me This Pen.mp4", HashMap<String, String>())
+        val bmFrame = mediaMetadataRetriever.getFrameAtTime(1000) //unit in microsecond
+        var bb = bmFrame
+
+        val mediaMetadataRetriever1 = MediaMetadataRetriever()
+        mediaMetadataRetriever1.setDataSource("http://3.7.30.86:8073/Commonfolder/LMS/nature shorts video.mp4", HashMap<String, String>())
+        val bmFrame1 = mediaMetadataRetriever.getFrameAtTime(1000) //unit in microsecond
+        var bb1 = bmFrame1*/
 
 
-    //startActivity( Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS))
+        //startActivity( Intent(Settings.ACTION_BATTERY_SAVER_SETTINGS))
 
 
         //Handler().postDelayed({ goToNextScreen() }, 2000)
@@ -113,57 +134,65 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         // this is for test purpose timing seeting
         // AlarmReceiver.setAlarm(this, 17, 45, 2017)
 
-    /*FirebaseMessaging.getInstance().subscribeToTopic("newss").addOnSuccessListener(object : OnSuccessListener<Void?> {
-        override fun onSuccess(aVoid: Void?) {
-            //Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
-        }
-    })*/
+        /*FirebaseMessaging.getInstance().subscribeToTopic("newss").addOnSuccessListener(object : OnSuccessListener<Void?> {
+            override fun onSuccess(aVoid: Void?) {
+                //Toast.makeText(applicationContext, "Success", Toast.LENGTH_LONG).show()
+            }
+        })*/
 
-    /* val email = Intent(Intent.ACTION_SENDTO)
-    email.setData(Uri.parse("mailto:"))
-    email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("saheli.bhattacharjee@indusnet.co.in"))
-    email.putExtra(Intent.EXTRA_SUBJECT, "sub")
-    email.putExtra(Intent.EXTRA_TEXT, "msg")
-    //email.type = "message/rfc822"
-    startActivity(Intent.createChooser(email, "Send mail..."))*/
+        /* val email = Intent(Intent.ACTION_SENDTO)
+        email.setData(Uri.parse("mailto:"))
+        email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("saheli.bhattacharjee@indusnet.co.in"))
+        email.putExtra(Intent.EXTRA_SUBJECT, "sub")
+        email.putExtra(Intent.EXTRA_TEXT, "msg")
+        //email.type = "message/rfc822"
+        startActivity(Intent.createChooser(email, "Send mail..."))*/
 
-
-    val receiver = ComponentName(this, AlarmBootReceiver::class.java)
-        packageManager.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP)
+        val receiver = ComponentName(this, AlarmBootReceiver::class.java)
+        packageManager.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
 
         progress_wheel = findViewById(R.id.progress_wheel)
         progress_wheel.stopSpinning()
 
+        getGlobalSettings()
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             if (Pref.isLocationPermissionGranted)
                 initPermissionCheck()
             else {
                 /*LocationPermissionDialog.newInstance(object : LocationPermissionDialog.OnItemSelectedListener {
                     override fun onOkClick() {
                         //initPermissionCheck()
-
                         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && Pref.isLocationHintPermissionGranted == false){
                             locDesc()
                         }else{
                             initPermissionCheck()
                         }
                     }
-
                     override fun onCrossClick() {
                         finish()
                     }
                 }).show(supportFragmentManager, "")*/
 
+
+
                 locDiscloserDialog = Dialog(this)
                 locDiscloserDialog.setCancelable(false)
-                locDiscloserDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                locDiscloserDialog.getWindow()!!
+                    .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 locDiscloserDialog.setContentView(R.layout.dialog_loc)
 
-                val tv_body = locDiscloserDialog.findViewById(R.id.tv_loc_dialog_body) as AppCustomTextView
-                var tv_ok = locDiscloserDialog.findViewById(R.id.tv_loc_dialog_ok) as AppCustomTextView
-                val tv_not_ok = locDiscloserDialog.findViewById(R.id.tv_loc_dialog_not_ok) as AppCustomTextView
-                var appN ="This"
+                val tv_body =
+                    locDiscloserDialog.findViewById(R.id.tv_loc_dialog_body) as AppCustomTextView
+                var tv_ok =
+                    locDiscloserDialog.findViewById(R.id.tv_loc_dialog_ok) as AppCustomTextView
+                val tv_not_ok =
+                    locDiscloserDialog.findViewById(R.id.tv_loc_dialog_not_ok) as AppCustomTextView
+                var appN = "This"
                 try {
                     appN = this.getResources().getString(R.string.app_name)
                 } catch (e: Exception) {
@@ -183,6 +212,22 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                     finish()
                 }
                 locDiscloserDialog.show()
+
+                /*LocPermissionDialog.newInstance(object :LocPermissionDialog.OnItemSelectedListener{
+                    override fun onOkClick() {
+                        *//*if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R && Pref.isLocationHintPermissionGranted == false){
+                            locDesc()
+                        }else{
+                            initPermissionCheck()
+                        }*//*
+
+                        initPermissionCheck()
+                    }
+
+                    override fun onCrossClick() {
+                        finish()
+                    }
+                }).show(supportFragmentManager, "")*/
             }
         else {
             checkGPSProvider()
@@ -191,9 +236,20 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }
 
 
+    private fun extractFrameFromVideo(videoPath: String): Bitmap? {
+        val retriever = MediaMetadataRetriever()
+        return try {
+            retriever.setDataSource(videoPath)
+            retriever.getFrameAtTime(1000000) // 1 second (1000000 microseconds)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+            null
+        } finally {
+            retriever.release()
+        }
+    }
 
-
-    fun checkBatteryOptiSettings(){
+    fun checkBatteryOptiSettings() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val intent = Intent()
             val packageName = packageName
@@ -201,10 +257,14 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
 
                 //Toaster.msgLong(this,"Please Don't optimize your battery for this app.")
-                CommonDialog.getInstance(getString(R.string.app_name), "You must select the option 'Don't Optimise' to use this app. " ,
-                    "Cancel", "Ok", false, object : CommonDialogClickListener {
+                CommonDialog.getInstance(getString(R.string.app_name),
+                    "You must select the option 'Don't Optimise' to use this app. ",
+                    "Cancel",
+                    "Ok",
+                    false,
+                    object : CommonDialogClickListener {
                         override fun onLeftClick() {
-                           finish()
+                            finish()
                         }
 
                         override fun onRightClick(editableData: String) {
@@ -213,7 +273,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
 
                     }).show(supportFragmentManager, "")
                 println("battery dialog scr")
-            } else{
+            } else {
                 println("battery next scr")
                 goTONextActi()
             }
@@ -221,7 +281,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }
 
 
-    private fun locDesc(){
+    private fun locDesc() {
         LocationHintDialog.newInstance(object : LocationHintDialog.OnItemSelectedListener {
             override fun onOkClick() {
                 Pref.isLocationHintPermissionGranted = true
@@ -231,27 +291,34 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }
 
     private fun permissionCheck() {
-        var strSub:String=""
+        var strSub: String = ""
         permList.clear()
-        var info: PackageInfo = this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
+        var info: PackageInfo =
+            this.packageManager.getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
         var list = info.requestedPermissionsFlags
         var list1 = info.requestedPermissions
         for (i in 0..list.size - 1) {
             if (list1.get(i) != "android.permission.ACCESS_GPS") {
 
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && list1.get(i) == "android.permission.ACCESS_BACKGROUND_LOCATION"){
-                    strSub=" (For Android 10 & Later)"
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && list1.get(i) == "android.permission.ACCESS_BACKGROUND_LOCATION") {
+                    strSub = " (For Android 10 & Later)"
                 }
 
-                if ( list1.get(i) == "android.permission.USE_FULL_SCREEN_INTENT" || list1.get(i) == "android.permission.SYSTEM_ALERT_WINDOW"
-                        || list1.get(i) == "android.permission.FOREGROUND_SERVICE"){
-                    strSub=" (System Defined)"
+                if (list1.get(i) == "android.permission.USE_FULL_SCREEN_INTENT" || list1.get(i) == "android.permission.SYSTEM_ALERT_WINDOW"
+                    || list1.get(i) == "android.permission.FOREGROUND_SERVICE"
+                ) {
+                    strSub = " (System Defined)"
                 }
 
-                var obj: PermissionDetails = PermissionDetails(list1.get(i).replace("android.permission.", "").replace("_", " ")
-                        .replace("com.google.android.c2dm.permission.RECEIVE", "Receive Data from Internet").replace("com.rubyfood.permission.C2D", "") + strSub, list.get(i))
+                var obj: PermissionDetails = PermissionDetails(
+                    list1.get(i).replace("android.permission.", "").replace("_", " ")
+                        .replace(
+                            "com.google.android.c2dm.permission.RECEIVE",
+                            "Receive Data from Internet"
+                        ).replace("com.rubyfood.permission.C2D", "") + strSub, list.get(i)
+                )
 
-                strSub=""
+                strSub = ""
                 if (list.get(i) == 3) {
                     permList.add(obj)
                 } else {
@@ -268,37 +335,43 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         }
         permList = (permList + permListDenied).toMutableList()
 
-        for(i in 0..permList.size-1){
+        for (i in 0..permList.size - 1) {
             // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
 //            XLog.d("Permission Name"+permList.get(i).permissionName + " Status : Granted")
-            Timber.d("Permission Name"+permList.get(i).permissionName + " Status : Granted")
+            Timber.d("Permission Name" + permList.get(i).permissionName + " Status : Granted")
         }
-        for(i in 0..permListDenied.size-1){
+        for (i in 0..permListDenied.size - 1) {
             // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
 //            XLog.d("Permission Name"+permListDenied.get(i).permissionName + " Status : Denied")
-            Timber.d("Permission Name"+permListDenied.get(i).permissionName + " Status : Denied")
+            Timber.d("Permission Name" + permListDenied.get(i).permissionName + " Status : Denied")
         }
     }
 
 
     private fun initPermissionCheck() {
 
-        var permissionLists : Array<String> ?= null
+        var permissionLists: Array<String>? = null
 
         permissionLists = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-            //arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-            arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+        //arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            arrayOf<String>(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
         else
-            arrayOf<String>(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)
+            arrayOf<String>(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
 
         permissionUtils = PermissionUtils(this, object : PermissionUtils.OnPermissionListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onPermissionGranted() {
                 //Pref.isLocationPermissionGranted = true
                 //checkGPSProvider()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     accessBackLoc()
-                }else{
+                } else {
                     Pref.isLocationPermissionGranted = true
                     checkGPSProvider()
                 }
@@ -306,7 +379,11 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
 
             override fun onPermissionNotGranted() {
                 //AppUtils.showButtonSnackBar(this@SplashActivity, rl_splash_main, getString(R.string.error_loc_permission_request_msg))
-                DisplayAlert.showSnackMessage(this@SplashActivity, alert_splash_snack_bar, getString(R.string.accept_permission))
+                DisplayAlert.showSnackMessage(
+                    this@SplashActivity,
+                    alert_splash_snack_bar,
+                    getString(R.string.accept_permission)
+                )
                 Handler().postDelayed(Runnable {
                     finish()
                     exitProcess(0)
@@ -316,10 +393,11 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         }, permissionLists)
     }
 
-    private fun accessBackLoc(){
-        var permissionLists : Array<String> ?= null
+    private fun accessBackLoc() {
+        var permissionLists: Array<String>? = null
 
-        permissionLists = arrayOf<String>( Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        permissionLists = arrayOf<String>(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        permissionLists += Manifest.permission.FOREGROUND_SERVICE
         permissionUtils = PermissionUtils(this, object : PermissionUtils.OnPermissionListener {
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun onPermissionGranted() {
@@ -329,7 +407,11 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
 
             override fun onPermissionNotGranted() {
                 //AppUtils.showButtonSnackBar(this@SplashActivity, rl_splash_main, getString(R.string.error_loc_permission_request_msg))
-                DisplayAlert.showSnackMessage(this@SplashActivity, alert_splash_snack_bar, getString(R.string.accept_permission))
+                DisplayAlert.showSnackMessage(
+                    this@SplashActivity,
+                    alert_splash_snack_bar,
+                    getString(R.string.accept_permission)
+                )
                 Handler().postDelayed(Runnable {
                     finish()
                     exitProcess(0)
@@ -350,7 +432,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER) /*&& PermissionHelper.checkLocationPermission(this, 0)*/) {
             checkGPSAvailability()
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isIgnoringBatteryOptimizations())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isIgnoringBatteryOptimizations())
                 checkBatteryOptimization()
             else
                 doAfterPermissionFunctionality()
@@ -397,48 +479,48 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         progress_wheel.spin()
         val repository = VersionCheckingRepoProvider.versionCheckingRepository()
         BaseActivity.compositeDisposable.add(
-                repository.versionChecking()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({ result ->
-                            progress_wheel.stopSpinning()
-                            val response = result as VersionCheckingReponseModel
-                            // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
+            repository.versionChecking()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ result ->
+                    progress_wheel.stopSpinning()
+                    val response = result as VersionCheckingReponseModel
+                    // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
 //                            XLog.d("VERSION CHECKING RESPONSE: " + "STATUS: " + response.status + ", MESSAGE:" + result.message)
-                            Timber.d("VERSION CHECKING RESPONSE: " + "STATUS: " + response.status + ", MESSAGE:" + result.message)
+                    Timber.d("VERSION CHECKING RESPONSE: " + "STATUS: " + response.status + ", MESSAGE:" + result.message)
 
-                            if (response.status == NetworkConstant.SUCCESS) {
+                    if (response.status == NetworkConstant.SUCCESS) {
 
-                             /*   XLog.d("===========VERSION CHECKING SUCCESS RESPONSE===========")
-                                XLog.d("min version=====> " + response.min_req_version)
-                                XLog.d("store version=====> " + response.play_store_version)
-                                XLog.d("mandatory msg======> " + response.mandatory_msg)
-                                XLog.d("optional msg=====> " + response.optional_msg)
-                                XLog.d("apk url======> " + response.apk_url)
-                                XLog.d("=======================================================")*/
-                                Timber.d("===========VERSION CHECKING SUCCESS RESPONSE===========")
-                                Timber.d("min version=====> " + response.min_req_version)
-                                Timber.d("store version=====> " + response.play_store_version)
-                                Timber.d("mandatory msg======> " + response.mandatory_msg)
-                                Timber.d("optional msg=====> " + response.optional_msg)
-                                Timber.d("apk url======> " + response.apk_url)
-                                Timber.d("=======================================================")
+                        /*   XLog.d("===========VERSION CHECKING SUCCESS RESPONSE===========")
+                           XLog.d("min version=====> " + response.min_req_version)
+                           XLog.d("store version=====> " + response.play_store_version)
+                           XLog.d("mandatory msg======> " + response.mandatory_msg)
+                           XLog.d("optional msg=====> " + response.optional_msg)
+                           XLog.d("apk url======> " + response.apk_url)
+                           XLog.d("=======================================================")*/
+                        Timber.d("===========VERSION CHECKING SUCCESS RESPONSE===========")
+                        Timber.d("min version=====> " + response.min_req_version)
+                        Timber.d("store version=====> " + response.play_store_version)
+                        Timber.d("mandatory msg======> " + response.mandatory_msg)
+                        Timber.d("optional msg=====> " + response.optional_msg)
+                        Timber.d("apk url======> " + response.apk_url)
+                        Timber.d("=======================================================")
 
-                                versionChecking(response)
-                                //goToNextScreen()
-                            } else {
-                                goToNextScreen()
-                            }
-                            isApiInitiated = false
+                        versionChecking(response)
+                        //goToNextScreen()
+                    } else {
+                        goToNextScreen()
+                    }
+                    isApiInitiated = false
 
-                        }, { error ->
-                            isApiInitiated = false
+                }, { error ->
+                    isApiInitiated = false
 //                            XLog.d("VERSION CHECKING ERROR: " + "MESSAGE:" + error.message)
-                            Timber.d("VERSION CHECKING ERROR: " + "MESSAGE:" + error.message) // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
-                            error.printStackTrace()
-                            progress_wheel.stopSpinning()
-                            goToNextScreen()
-                        })
+                    Timber.d("VERSION CHECKING ERROR: " + "MESSAGE:" + error.message) // 1.0 SplashActivity AppV 4.0.7 Timber Log Implementation
+                    error.printStackTrace()
+                    progress_wheel.stopSpinning()
+                    goToNextScreen()
+                })
         )
     }
 
@@ -456,16 +538,18 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         try {
 
             val minVersion = Integer.parseInt(response.min_req_version?.replace(".", "").toString())
-            val storeVersion = Integer.parseInt(response.play_store_version?.replace(".", "").toString())
+            val storeVersion =
+                Integer.parseInt(response.play_store_version?.replace(".", "").toString())
             val currentVersion = Integer.parseInt(BuildConfig.VERSION_NAME.replace(".", ""))
 
             when {
 
-                storeVersion.toInt()-currentVersion.toInt() > 2 -> {
+                storeVersion.toInt() - currentVersion.toInt() > 2 -> {
 
                     val simpleDialogV = Dialog(this)
                     simpleDialogV.setCancelable(false)
-                    simpleDialogV.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    simpleDialogV.getWindow()!!
+                        .setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                     simpleDialogV.setContentView(R.layout.dialog_message)
                     val dialogHeaderV =
                         simpleDialogV.findViewById(R.id.dialog_message_header_TV) as AppCustomTextView
@@ -476,9 +560,11 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                     } else {
                         dialog_yes_no_headerTVV.text = "Hi User" + "!"
                     }
-                    dialogHeaderV.text = "You are using lower Version of Application. Please Uninstall this and Install Latest version from Playstore."
+                    dialogHeaderV.text =
+                        "You are using lower Version of Application. Please Uninstall this and Install Latest version from Playstore."
 
-                    val dialogYesV = simpleDialogV.findViewById(R.id.tv_message_ok) as AppCustomTextView
+                    val dialogYesV =
+                        simpleDialogV.findViewById(R.id.tv_message_ok) as AppCustomTextView
                     dialogYesV.text = "Uninstall"
                     dialogYesV.setOnClickListener({ view ->
                         simpleDialogV.cancel()
@@ -493,41 +579,42 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                 currentVersion >= storeVersion -> goToNextScreen()
                 currentVersion in minVersion until storeVersion -> {
                     CommonDialog.getInstance("New Update", response.optional_msg!!,
-                            "Cancel", "Ok", false, object : CommonDialogClickListener {
-                        override fun onLeftClick() {
-                            goToNextScreen()
-                        }
-
-                        override fun onRightClick(editableData: String) {
-                            if (!TextUtils.isEmpty(response.apk_url)) {
-                                val webLaunch = Intent(Intent.ACTION_VIEW, Uri.parse(response.apk_url))
-                                startActivity(webLaunch)
-                                finish()
-                                exitProcess(0)
-                            }
-                            else
+                        "Cancel", "Ok", false, object : CommonDialogClickListener {
+                            override fun onLeftClick() {
                                 goToNextScreen()
-                        }
+                            }
 
-                    }).show(supportFragmentManager, "")
+                            override fun onRightClick(editableData: String) {
+                                if (!TextUtils.isEmpty(response.apk_url)) {
+                                    val webLaunch =
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(response.apk_url))
+                                    startActivity(webLaunch)
+                                    finish()
+                                    exitProcess(0)
+                                } else
+                                    goToNextScreen()
+                            }
+
+                        }).show(supportFragmentManager, "")
                 }
+
                 else -> {
                     CommonDialogSingleBtn.getInstance("New Update", response.mandatory_msg!!,
-                            "OK", object : OnDialogClickListener {
-                        override fun onOkClick() {
+                        "OK", object : OnDialogClickListener {
+                            override fun onOkClick() {
 
-                            /*market://details?id=com.fieldtrackingsystem*/
+                                /*market://details?id=com.fieldtrackingsystem*/
 
-                            if (!TextUtils.isEmpty(response.apk_url)) {
-                                val webLaunch = Intent(Intent.ACTION_VIEW, Uri.parse(response.apk_url))
-                                startActivity(webLaunch)
-                                finish()
-                                exitProcess(0)
+                                if (!TextUtils.isEmpty(response.apk_url)) {
+                                    val webLaunch =
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(response.apk_url))
+                                    startActivity(webLaunch)
+                                    finish()
+                                    exitProcess(0)
+                                } else
+                                    goToNextScreen()
                             }
-                            else
-                                goToNextScreen()
-                        }
-                    }).show(supportFragmentManager, "")
+                        }).show(supportFragmentManager, "")
                 }
             }
         } catch (e: Exception) {
@@ -561,7 +648,12 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }*/
 
     private fun goToNextScreen() {
-        addAutoStartup()
+        if(Pref.IsAllowGPSTrackingInBackgroundForLMS == false){
+            addAutoStartup()
+        }else{
+            goTONextActi()
+        }
+
     }
 
     private fun addAutoStartup() {
@@ -569,22 +661,38 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
             val intent = Intent()
             val manufacturer = Build.MANUFACTURER
             if ("xiaomi".equals(manufacturer, ignoreCase = true)) {
-                intent.component = ComponentName("com.miui.securitycenter", "com.miui.permcenter.autostart.AutoStartManagementActivity")
+                intent.component = ComponentName(
+                    "com.miui.securitycenter",
+                    "com.miui.permcenter.autostart.AutoStartManagementActivity"
+                )
             } else if ("oppo".equals(manufacturer, ignoreCase = true)) {
-                intent.component = ComponentName("com.coloros.safecenter", "com.coloros.safecenter.permission.startup.StartupAppListActivity")
+                intent.component = ComponentName(
+                    "com.coloros.safecenter",
+                    "com.coloros.safecenter.permission.startup.StartupAppListActivity"
+                )
             } else if ("vivo".equals(manufacturer, ignoreCase = true)) {
-                intent.component = ComponentName("com.vivo.permissionmanager", "com.vivo.permissionmanager.activity.BgStartUpManagerActivity")
+                intent.component = ComponentName(
+                    "com.vivo.permissionmanager",
+                    "com.vivo.permissionmanager.activity.BgStartUpManagerActivity"
+                )
             } else if ("Letv".equals(manufacturer, ignoreCase = true)) {
-                intent.component = ComponentName("com.letv.android.letvsafe", "com.letv.android.letvsafe.AutobootManageActivity")
+                intent.component = ComponentName(
+                    "com.letv.android.letvsafe",
+                    "com.letv.android.letvsafe.AutobootManageActivity"
+                )
             } else if ("Honor".equals(manufacturer, ignoreCase = true)) {
-                intent.component = ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity")
+                intent.component = ComponentName(
+                    "com.huawei.systemmanager",
+                    "com.huawei.systemmanager.optimize.process.ProtectActivity"
+                )
             }
-            val list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            if (list.size > 0 && Pref.AutostartPermissionStatus==false) {
+            val list =
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+            if (list.size > 0 && Pref.AutostartPermissionStatus == false) {
                 //startActivity(intent)
                 Pref.AutostartPermissionStatus = true
-                startActivityForResult(intent,401)
-            }else{
+                startActivityForResult(intent, 401)
+            } else {
                 goTONextActi()
             }
         } catch (e: java.lang.Exception) {
@@ -594,7 +702,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }
 
 
-    fun goTONextActi(){
+    fun goTONextActi() {
 
         /*val intent = Intent()
         val packageName = packageName
@@ -614,7 +722,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                 // 2.0 SplashActivity AppV 4.0.7 Suman    21/03/2023 Location rectification for previous location 25760
                 println("loc_fetch_tag splash begin")
                 progress_wheel.spin()
-                try{
+                try {
                     SingleShotLocationProvider.requestSingleUpdate(this,
                         object : SingleShotLocationProvider.LocationCallback {
                             override fun onStatusChanged(status: String) {
@@ -636,8 +744,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                                 progress_wheel.stopSpinning()
                             }
                         })
-                }
-                catch (ex:Exception){
+                } catch (ex: Exception) {
                     ex.printStackTrace()
                     Timber.d("Splash onNewLocationAvailable ex ${ex.message}")
                     progress_wheel.stopSpinning()
@@ -667,7 +774,11 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
         super.onStop()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         /*if (requestCode == PermissionHelper.TAG_LOCATION_RESULTCODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -694,7 +805,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == 401){
+        if (requestCode == 401) {
             goTONextActi()
         }
 
@@ -710,8 +821,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                     callVersionCheckingApi()
                 else
                     goToNextScreen()
-            }
-            else {
+            } else {
                 mGpsStatusDetector?.checkOnActivityResult(requestCode, resultCode)
                 checkGPSAvailability()
                 if (!Pref.isAutoLogout)
@@ -728,7 +838,7 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
                 System.exit(0)
             },1000)*/
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isIgnoringBatteryOptimizations())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !isIgnoringBatteryOptimizations())
                 Toaster.msgShort(this, "Please allow battery optimization")
 
             val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -757,5 +867,25 @@ class SplashActivity : BaseActivity(), GpsStatusDetector.GpsStatusDetectorCallBa
     }
 
     override fun onGpsAlertCanceledByUser() {
+    }
+
+    fun getGlobalSettings() {
+        val repository = ConfigFetchRepoProvider.provideConfigFetchRepository()
+        BaseActivity.compositeDisposable.add(
+            repository.configFetch()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({ result ->
+                    val configResponse = result as ConfigFetchResponseModel
+
+                    if (configResponse.IsAllowGPSTrackingInBackgroundForLMS != null)
+                        Pref.IsAllowGPSTrackingInBackgroundForLMS =
+                            configResponse.IsAllowGPSTrackingInBackgroundForLMS!!
+
+                    println("tag_sett_check ${Pref.IsAllowGPSTrackingInBackgroundForLMS}")
+                }, { error ->
+                    error.printStackTrace()
+                })
+        )
     }
 }
