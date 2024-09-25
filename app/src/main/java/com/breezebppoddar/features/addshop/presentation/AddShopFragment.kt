@@ -3318,6 +3318,10 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
                     AppUtils.isRevisit = false
                     //filePathNewAudio = Environment.getExternalStorageDirectory().toString() + "/${System.currentTimeMillis()}recorded_audio.wav"
                     filePathNewAudio = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/recorded_audio${System.currentTimeMillis()}.mp3"
+
+                    var audFile = File("/data/user/0/com.breezebppoddar/files", "recorded_audio${System.currentTimeMillis()}.mp3")
+                    filePathNewAudio = audFile.path
+
                     val color = resources.getColor(R.color.deep_green)
                     val requestCode = PermissionHelper.REQUEST_CODE_AUDIO_REC_NW
 

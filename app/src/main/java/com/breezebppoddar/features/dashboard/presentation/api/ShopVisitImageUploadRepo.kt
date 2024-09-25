@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import timber.log.Timber
 import java.io.File
 
 /**
@@ -81,12 +82,15 @@ class ShopVisitImageUploadRepo(val apiService: ShopVisitImageUploadApi) {
     }
 
     fun syncNewShopAudio(obj: AudioSyncModel, audio_link: String, context: Context): Observable<BaseResponse> {
+        Timber.d("tag_audio_sync begin with path $audio_link")
         var profile_img_data: MultipartBody.Part? = null
         val profile_img_file = File(audio_link) //FileUtils.getFile(context, Uri.parse(audio_link))
         if (profile_img_file != null && profile_img_file.exists()) {
+            Timber.d("tag_audio_sync begin with path $audio_link file exist")
             val profileImgBody = RequestBody.create(MediaType.parse("multipart/form-data"), profile_img_file)
             profile_img_data = MultipartBody.Part.createFormData("audio", profile_img_file.name, profileImgBody)
         } else {
+            Timber.d("tag_audio_sync begin with path $audio_link file not exist")
             var mFile: File? = null
             if (context is DashboardActivity)
                 mFile = (context as DashboardActivity).getShopDummyImageFile()

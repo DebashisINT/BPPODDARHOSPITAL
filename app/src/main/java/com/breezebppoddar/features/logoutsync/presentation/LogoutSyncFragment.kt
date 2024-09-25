@@ -7239,6 +7239,15 @@ class LogoutSyncFragment : BaseFragment(), View.OnClickListener {
                                      Timber.d("tag_sync_audio updating for shop_id ${obj.shop_id} and visit_datetime ${obj.datetime}")
                                      AppDatabase.getDBInstance()!!.shopAudioDao().updateIsUploaded(true, obj.shop_id,obj.datetime)
                                      uiThread {
+                                         try {
+                                             var fileName = obj.audio_path.split("/").last()
+                                             var audFile = File("/data/user/0/com.breezebppoddar/files", fileName)
+                                             audFile.delete()
+                                         }catch (ex:Exception){
+                                             ex.printStackTrace()
+                                         }
+
+
                                          syncAudioDataNew()
                                      }
                                  }
